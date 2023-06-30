@@ -1,0 +1,110 @@
+﻿@using fstools.Models;
+@using fstools.Services;
+
+<p style="font-size: @fontSize">   
+    
+    @timerText
+    <span style="border: black 2px solid; padding:2px">
+        @info[timerNumber-1].ElaspedTime
+    </span>
+
+    <button class="btn btn-sm btn-primary" @onclick="StartTimer">@info[timerNumber-1].StartText</button>
+    <button class="btn btn-sm btn-primary" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="PauseResumeTimer">@info[timerNumber-1].PauseResumeText</button>
+    <button class="btn btn-sm btn-danger" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="StopTimer">Stop</button>
+    
+</p>
+@code {
+    [Parameter]
+    public String timerText { get; set; }
+
+    [Parameter]
+    public int timerNumber { get; set; }
+
+    [Parameter]
+    public List<StopwatchInfo> infoIn { get; set; }
+
+    [Parameter]
+    public List<TimerService> timersIn { get; set; }
+
+    [Parameter]
+    public string fontSize { get; set; } = "50px";
+
+
+    private List<StopwatchInfo> info = new List<StopwatchInfo>();
+    private List<TimerService> timers = new List<TimerService>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        timers = timersIn;
+        info = infoIn;
+
+        if (timers.Count < timerNumber)
+        {            
+            timers.Add(new TimerService());
+            info.Add(new StopwatchInfo());
+        }      
+        else
+        {
+            timers[timerNumber-1].SetCallback(TimerCallback);
+            info[timerNumber - 1].ElaspedTime = timers[timerNumber - 1].FormattedTime();
+            await InvokeAsync(StateHasChanged);
+        }
+
+    }
+
+    async Task Remove(int i)
+    {
+        timers.RemoveAt(i);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    void StartTimer()
+    {
+        info[timerNumber - 1].StartText = "Restart";
+        timers[timerNumber - 1].StartTimer(TimerCallback);
+    }
+
+    void PauseResumeTimer()
+    {
+        if (info[timerNumber - 1].PauseResumeText.Equals("Pause"))
+        {
+            info[timerNumber - 1].PauseResumeText = "Resume";
+            timers[timerNumber - 1].PauseTimer();
+        }
+        else
+        {
+            info[timerNumber - 1].PauseResumeText = "Pause";
+            timers[timerNumber - 1].ResumeTimer();
+        }
+    }
+
+    void PauseTimer() => timers[timerNumber - 1].PauseTimer();
+    void ResumeTimer() => timers[timerNumber - 1].ResumeTimer();
+    void StopTimer()
+    {
+        info[timerNumber - 1].PauseResumeText = "Pause";
+        info[timerNumber - 1].StartText = "Start";
+        timers[timerNumber - 1].StopTimer();
+    }
+
+
+    public async Task TimerCallback(TimeSpan ts)
+    {
+        info[timerNumber - 1].ElaspedTime = timers[timerNumber - 1].FormattedTime();
+        await InvokeAsync(StateHasChanged);
+        return;
+    }
+
+    public void ResetTimers()
+    {
+        foreach (var t in timers)
+        {
+            t.StopTimer();
+        }
+        timers = new List<TimerService>();
+        timers.Add(new TimerService());
+
+        info = new List<StopwatchInfo>();
+        info.Add(new StopwatchInfo());      
+    }
+}

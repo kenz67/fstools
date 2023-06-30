@@ -1,0 +1,50 @@
+﻿@page "/timer"
+@using fstools.Services;
+
+@inject NavigationManager NavManager
+
+<PageTitle>Timers</PageTitle>
+
+<h1>Timers</h1>
+<button class="btn btn-sm btn-primary" @onclick="AddTimer">Add Timer</button>
+<button class="btn btn-sm btn-primary" @onclick="ResetTimers">Reset</button>
+
+@for (int i = 1; i <= timerCount; i++)
+{   
+    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info"/>
+    <BootstrapBlazor.Components.Divider/>
+}
+@*<StopwatchComponent timerText="Timer Two" timerNumber=4 />*@
+
+@code
+{
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+
+    int timerCount;
+    StopwatchComponent c = new StopwatchComponent();
+
+    protected override  void OnInitialized()
+    {
+        timerCount = MainLayout.timerCnt;
+        //timerCount = c.GetTimerCount();
+        if (timerCount.Equals(0))
+        {
+            timerCount = 1;
+        }
+    }
+
+    public string getText(int i) => $"Timer {i}";
+
+    public void AddTimer()
+    {
+        timerCount++;
+    }
+
+    void ResetTimers()
+    {
+        c.ResetTimers();
+        timerCount=1;
+        NavManager.NavigateTo("/timer", true);
+    }
+}
