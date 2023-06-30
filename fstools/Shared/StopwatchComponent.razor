@@ -7,11 +7,13 @@
     <span style="border: black 2px solid; padding:2px">
         @info[timerNumber-1].ElaspedTime
     </span>
-
-    <button class="btn btn-sm btn-primary" @onclick="StartTimer">@info[timerNumber-1].StartText</button>
-    <button class="btn btn-sm btn-primary" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="PauseResumeTimer">@info[timerNumber-1].PauseResumeText</button>
-    <button class="btn btn-sm btn-danger" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="StopTimer">Stop</button>
-    
+    &nbsp;&nbsp;
+    @if (showButtons)
+    {
+        <button class="btn btn-sm btn-primary" @onclick="StartTimer">@info[timerNumber-1].StartText</button>
+        <button class="btn btn-sm btn-primary" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="PauseResumeTimer">@info[timerNumber-1].PauseResumeText</button>
+        <button class="btn btn-sm btn-danger" disabled=@(info[timerNumber-1].StartText.Equals("Start") ? true : false) @onclick="StopTimer">Stop</button>
+    }
 </p>
 @code {
     [Parameter]
@@ -27,8 +29,10 @@
     public List<TimerService> timersIn { get; set; }
 
     [Parameter]
-    public string fontSize { get; set; } = "50px";
+    public string fontSize { get; set; } = "30px";
 
+    [Parameter]
+    public bool showButtons { get; set; } = true;
 
     private List<StopwatchInfo> info = new List<StopwatchInfo>();
     private List<TimerService> timers = new List<TimerService>();

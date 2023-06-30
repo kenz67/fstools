@@ -40,6 +40,7 @@ public class TimerService
 
     public TimeSpan SetCallback(Func<TimeSpan, Task> callback)
     {
+        _callback -= callback;
         _callback += callback;
         return _stopwatch?.Elapsed ?? new TimeSpan();
     }

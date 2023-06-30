@@ -8,10 +8,12 @@
 <h1>Timers</h1>
 <button class="btn btn-sm btn-primary" @onclick="AddTimer">Add Timer</button>
 <button class="btn btn-sm btn-primary" @onclick="ResetTimers">Reset</button>
-
+<br /><br />
 @for (int i = 1; i <= timerCount; i++)
-{   
-    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info"/>
+{
+    var showButtons = i > 1;
+    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info" 
+    showButtons="@showButtons"/>
     <BootstrapBlazor.Components.Divider/>
 }
 @*<StopwatchComponent timerText="Timer Two" timerNumber=4 />*@
