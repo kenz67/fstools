@@ -12,8 +12,8 @@
 @for (int i = 1; i <= timerCount; i++)
 {
     var showButtons = i > 1;
-    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info" 
-    showButtons="@showButtons"/>
+    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info"
+                    showButtons="@showButtons"/>
     <BootstrapBlazor.Components.Divider/>
 }
 @*<StopwatchComponent timerText="Timer Two" timerNumber=4 />*@

@@ -1,5 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('BootstrapBlazor/css/bootstrap.blazor.bundle.min.css');
+@import url('BootstrapBlazor.FontAwesome/css/bootstrap.blazor.bundle.min.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
