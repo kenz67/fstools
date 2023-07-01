@@ -1,4 +1,5 @@
 ﻿@page "/timer"
+@using BootstrapBlazor.Components
 @using fstools.Services;
 
 @inject NavigationManager NavManager
@@ -14,9 +15,8 @@
     var showButtons = i > 1;
     <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info"
                     showButtons="@showButtons"/>
-    <BootstrapBlazor.Components.Divider/>
+    <Divider/>
 }
-@*<StopwatchComponent timerText="Timer Two" timerNumber=4 />*@
 
 @code
 {

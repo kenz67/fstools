@@ -1,0 +1,75 @@
+﻿@page "/notes"
+@using BootstrapBlazor.Components
+
+
+<PageTitle>Notes</PageTitle>
+
+<h1>Notes</h1>
+
+<Editor ShowSubmit="false" @bind-Value=@MainLayout.NotesValue IsEditor="true" Height="900" ToolbarItems="@ToolbarItems" />
+
+@code
+{
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+
+    private List<object> ToolbarItems = new List<object>
+    {
+        new List<object>
+        {
+            "style", new List<string>()
+            {
+                "style"
+            }
+        },
+        new List<object>
+        {
+            "fontstyle", new List<string>()
+            {
+                "bold", "italic", "underline", "clear"
+            }
+        },
+        new List<object>
+        {
+            "font", new List<string>()
+            {
+                "strikethrough", "superscript", "subscript"
+            }
+        },
+        new List<object>
+        {
+            "fontsize", new List<string>()
+            {
+                "fontsize"
+            }
+        },
+        new List<object>
+        {
+            "color", new List<string>()
+            {
+                "color"
+            }
+        },
+        new List<object>
+        {
+            "para", new List<string>()
+            {
+                "ul", "ol", "paragraph"
+            }
+        },
+        //new List<object>
+        //{
+        //    "height", new List<string>()
+        //    {
+        //        "height"
+        //    }
+        //},
+        new List<object>
+        {
+            "misc", new List<string>()
+            {
+                "undo", "redo"
+            }
+        },
+    };
+}
