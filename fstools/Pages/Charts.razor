@@ -28,11 +28,11 @@
     @if (charts != null && charts.ICAO.Count > 0)
     {    
         <div class="col-8">
-            <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
+            <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.Chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
                  <BodyTemplate>
                      <Card>
                          <BodyTemplate>
-                                @context.chart_name
+                                @context.Chart_name
                           </BodyTemplate>
                      </Card>                     
                 </BodyTemplate>
@@ -99,7 +99,7 @@
 
     private async Task SelectedItem(Chart chart)
     {
-        pdf = chart.pdf_path;
+        pdf = chart.Pdf_path;
         showPdf = true;
         if (PdfReader != null)
         {

@@ -1,4 +1,4 @@
-using fstools.Data;
+using fstools.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddBootstrapBlazor();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<CommonDataService>();
 
 var app = builder.Build();
 
