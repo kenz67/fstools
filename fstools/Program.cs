@@ -7,6 +7,7 @@ builder.Services.AddBootstrapBlazor();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<TimerService>();
+builder.Services.AddSingleton<ChartService>();
 builder.Services.AddSingleton<NotesService>();
 
 var app = builder.Build();

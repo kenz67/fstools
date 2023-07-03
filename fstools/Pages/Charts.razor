@@ -4,6 +4,9 @@
 @using System.Diagnostics.CodeAnalysis;
 @using fstools.Models;
 @using System.ComponentModel;
+@using fstools.Services;
+
+@inject ChartService ChartSvc;
 
 <PageTitle>Charts</PageTitle>
 
@@ -16,7 +19,7 @@
     <div class="col-2">
         <BootstrapInput PlaceHolder="ICAO."
            TValue="string"
-            @bind-Value="@icao"
+            @bind-Value="@ChartSvc.CurrentIcao"
            IsAutoFocus="true"
            IsSelectAllTextOnFocus="true"
            ShowLabel="true"
@@ -46,9 +49,9 @@
 </Collapse>
 <div class="row g-3">
     <div class="col-12">
-        @if (showPdf)
+        @if (ChartSvc.ShowPdf)
         {
-            <PdfReader @ref="PdfReader" FileName="@pdf"  Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px"/>
+            <PdfReader @ref="PdfReader" FileName="@ChartSvc.Pdf"  Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px"/>
         }
     </div>
 </div>
@@ -68,11 +71,19 @@
     //TODO: Weather page
     PdfReader PdfReader { get; set; }
 
-    private string icao;
     private HttpClient client = new HttpClient();
     private ChartList charts;
-    private String pdf { get; set; }
-    private bool showPdf = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pdf = ChartSvc.ShowPdf;
+        if (!String.IsNullOrEmpty(ChartSvc.CurrentIcao))
+        {
+            await Search();
+            ChartSvc.ShowPdf = pdf;
+        }
+    }
+
 
     private async Task OnEnterAsync(string icao)
     {
@@ -82,7 +93,7 @@
 
     private async Task Search()
     {
-        await PerformSearch(icao);
+        await PerformSearch(ChartSvc.CurrentIcao);
     }
 
     private async Task PerformSearch(string icao)
@@ -95,21 +106,24 @@
         var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/charts?apt={icao}");
         response = response
             .Replace($"\"{icao}\":", "\"ICAO\":")
+            .Replace($"\"K{icao}\":", "\"ICAO\":")
             .Replace("\"ADP\"", "\"Airport Diagram\"")
             .Replace("\"DP\"", "\"Departures (SID)\"")
             .Replace("\"HOT\"", "\"Hot Spots\"")
             .Replace("\"IAP\"", "\"Approaches\"")
             .Replace("\"MIN\"", "\"Minimums\"")
             .Replace("\"STAR\"", "\"Arrivals (STAR)\"")
+            .Replace("\"DAU\"", "\"Depature AAUP\"")
+            .Replace("\"LAH\"", "\"Land and Hold Short\"")
             ;
         charts = JsonConvert.DeserializeObject<ChartList>(response);
-        showPdf = false;
+        ChartSvc.ShowPdf = false;
     }
 
     private async Task SelectedItem(Chart chart)
     {
-        pdf = chart.Pdf_path;
-        showPdf = true;
+        ChartSvc.Pdf = chart.Pdf_path;
+        ChartSvc.ShowPdf = true;
         if (PdfReader != null)
         {
             //for some reason, it is one behind so need to refresh twice
