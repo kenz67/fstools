@@ -1,0 +1,114 @@
+﻿@page "/charts"
+@using BootstrapBlazor.Components
+@using Newtonsoft.Json;
+@using System.Diagnostics.CodeAnalysis;
+@using fstools.Models;
+@using System.ComponentModel;
+
+<PageTitle>Charts</PageTitle>
+
+<h1>Charts</h1>
+
+<Collapse>
+<CollapseItems>
+    <CollapseItem Text="Search" Class=""  IsCollapsed="false">
+<div class="row g-3">
+    <div class="col-2">
+        <BootstrapInput PlaceHolder="ICAO."
+           TValue="string"
+            @bind-Value="@icao"
+           IsAutoFocus="true"
+           IsSelectAllTextOnFocus="true"
+           ShowLabel="true"           
+           DisplayText="Enter ICAO" />
+    </div>
+    <div class="col-2">
+        <Button style="margin-top:27px" ButtonStyle="ButtonStyle.Round" Color="Color.Primary" OnClick="Search">Search</Button>
+    </div>
+    @if (charts != null && charts.ICAO.Count > 0)
+    {    
+        <div class="col-8">
+            <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
+                 <BodyTemplate>
+                     <Card>
+                         <BodyTemplate>
+                                @context.chart_name
+                          </BodyTemplate>
+                     </Card>                     
+                </BodyTemplate>
+            </ListView>
+        </div>
+    }
+</div>
+</CollapseItem>
+</CollapseItems>
+</Collapse>
+<div class="row g-3">
+    <div class="col-12">
+        @if (showPdf)
+        {
+            <PdfReader @ref="PdfReader" FileName="@pdf"  Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px"/>
+        }
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-12">
+        Use with caution. The owner of this webpage not responsible for any misuse of outdated charts or other information as it is intended for flight simulation use. Please confirm the cycle dates prior to use of any data.
+    </div>
+</div>
+
+
+@code {
+    //TODO:  not found on chart search
+    //TODO: first page
+    //TODO: clear notes button
+    //TODO: Remember Chart
+    //TODO: Menu page smaller or hide?
+    //TODO: Weather page
+    PdfReader PdfReader { get; set; }
+
+    private string icao;
+    private HttpClient client = new HttpClient();
+    private ChartList charts;
+    private String pdf { get; set; }
+    private bool showPdf = false;
+
+
+    private int currentCount = 0;
+
+    private async Task Search()
+    {
+        if (string.IsNullOrEmpty(icao?.Trim()))
+        {
+            return;
+        }
+        icao = icao.Trim().ToUpper();
+        var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/charts?apt={icao}");
+        response = response
+            .Replace($"\"{icao}\":", "\"ICAO\":")
+            .Replace("\"ADP\"", "\"Airport Diagram\"")
+            .Replace("\"DP\"", "\"Departures (SID)\"")
+            .Replace("\"HOT\"", "\"Hot Spots\"")
+            .Replace("\"IAP\"", "\"Approaches\"")
+            .Replace("\"MIN\"", "\"Minimums\"")
+            .Replace("\"STAR\"", "\"Arrivals (STAR)\"")
+            ;
+        charts = JsonConvert.DeserializeObject<ChartList>(response);
+        showPdf = false;
+    }
+
+    private async Task SelectedItem(Chart chart)
+    {
+        pdf = chart.pdf_path;
+        showPdf = true;
+        if (PdfReader != null)
+        {
+            //for some reason, it is one behind so need to refresh twice
+            await PdfReader!.Refresh();   
+            await InvokeAsync(StateHasChanged);
+            await PdfReader!.Refresh();
+        }
+
+        await InvokeAsync(StateHasChanged);        
+    }
+}
