@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddBootstrapBlazor();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<CommonDataService>();
+builder.Services.AddSingleton<TimerService>();
+builder.Services.AddSingleton<NotesService>();
 
 var app = builder.Build();
 

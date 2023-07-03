@@ -26,7 +26,7 @@
     public List<StopwatchInfo> infoIn { get; set; }
 
     [Parameter]
-    public List<TimerService> timersIn { get; set; }
+    public List<FsTimer> timersIn { get; set; }
 
     [Parameter]
     public string fontSize { get; set; } = "30px";
@@ -35,7 +35,7 @@
     public bool showButtons { get; set; } = true;
 
     private List<StopwatchInfo> info = new List<StopwatchInfo>();
-    private List<TimerService> timers = new List<TimerService>();
+    private List<FsTimer> timers = new List<FsTimer>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,7 +44,7 @@
 
         if (timers.Count < timerNumber)
         {            
-            timers.Add(new TimerService());
+            timers.Add(new FsTimer());
             info.Add(new StopwatchInfo());
         }      
         else
@@ -105,8 +105,8 @@
         {
             t.StopTimer();
         }
-        timers = new List<TimerService>();
-        timers.Add(new TimerService());
+        timers = new List<FsTimer>();
+        timers.Add(new FsTimer());
 
         info = new List<StopwatchInfo>();
         info.Add(new StopwatchInfo());      

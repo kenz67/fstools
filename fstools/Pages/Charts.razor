@@ -19,7 +19,8 @@
             @bind-Value="@icao"
            IsAutoFocus="true"
            IsSelectAllTextOnFocus="true"
-           ShowLabel="true"           
+           ShowLabel="true"
+           OnEnterAsync="OnEnterAsync"
            DisplayText="Enter ICAO" />
     </div>
     <div class="col-2">
@@ -73,10 +74,18 @@
     private String pdf { get; set; }
     private bool showPdf = false;
 
-
-    private int currentCount = 0;
+    private async Task OnEnterAsync(string icao)
+    {
+        await PerformSearch(icao);
+        await InvokeAsync(StateHasChanged);
+    }
 
     private async Task Search()
+    {
+        await PerformSearch(icao);
+    }
+
+    private async Task PerformSearch(string icao)
     {
         if (string.IsNullOrEmpty(icao?.Trim()))
         {

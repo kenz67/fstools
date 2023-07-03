@@ -1,22 +1,16 @@
 ﻿@page "/notes"
 @using BootstrapBlazor.Components
-
+@using fstools.Services;
+@inject NotesService NotesData; 
 
 <PageTitle>Notes</PageTitle>
 
 <h1>Notes</h1>
 
-<Editor ShowSubmit="false" @bind-Value=@MainLayout.NotesValue IsEditor="true" Height="900" ToolbarItems="@ToolbarItems" />
+<Editor ShowSubmit="false" @bind-Value="@NotesData.Notes" IsEditor="true" Height="900" ToolbarItems="@ToolbarItems" />
 
 @code
 {
-    [CascadingParameter]
-    public MainLayout MainLayout { get; set; }
-
-    private string defaultNotes = @"<h3 class=""""><u>Altitudes</u></h3><ul><li><br></li></ul><p><br></p><p><br></p><p><br></p>
-                                    <h3 class=""""><u>Frequencies</u></h3><ul><li><br></li></ul><p><br></p><p><br></p><p><br></p>
-                                    <h3 class=""""><u>Notes</u></h3><ul><li><u><br></u></li></ul>";
-
     private List<object> ToolbarItems = new List<object>
     {
         new List<object>
@@ -69,12 +63,4 @@
             }
         },
     };
-
-    protected override void OnInitialized()
-    {
-        if (string.IsNullOrEmpty(MainLayout.NotesValue))
-        {
-            MainLayout.NotesValue = defaultNotes;
-        }
-    }
 }

@@ -2,6 +2,7 @@
 @using fstools.Services;
 
 @inherits LayoutComponentBase
+@inject TimerService Timers
 
 <PageTitle>FS Tools</PageTitle>
 
@@ -15,7 +16,7 @@
     <main>
         <div class="top-row px-4">
             <div class="col-11">
-                <StopwatchComponent timerText="Timer 1" timerNumber=1 timersIn="@_timers" infoIn="@info" fontSize="20px" />
+                <StopwatchComponent timerText="Timer 1" timerNumber=1 timersIn="@Timers.Timers" infoIn="@Timers.Info" fontSize="20px" />
             </div>
 @*            <div class="col-1">
                 <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
@@ -31,10 +32,5 @@
 
 @code
 {
-    //These act as global variables so the timers are not reset when navigating away from and back to timers page
-    public List<StopwatchInfo> info = new List<StopwatchInfo>();
-    public List<TimerService> _timers = new List<TimerService>();
-    public int timerCnt;
 
-    public string NotesValue;
 }

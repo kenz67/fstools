@@ -3,6 +3,7 @@
 @using fstools.Services;
 
 @inject NavigationManager NavManager
+@inject TimerService Timers
 
 <PageTitle>Timers</PageTitle>
 
@@ -13,7 +14,7 @@
 @for (int i = 1; i <= timerCount; i++)
 {
     var showButtons = i > 1;
-    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@MainLayout._timers" infoIn="@MainLayout.info"
+    <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@Timers.Timers" infoIn="@Timers.Info"
                     showButtons="@showButtons"/>
     <Divider/>
 }
@@ -28,7 +29,7 @@
 
     protected override  void OnInitialized()
     {
-        timerCount = MainLayout.timerCnt;
+        timerCount = Timers.TimerCnt;
         //timerCount = c.GetTimerCount();
         if (timerCount.Equals(0))
         {
