@@ -1,5 +1,6 @@
 ﻿@page "/charts"
 @using BootstrapBlazor.Components
+@using Microsoft.AspNetCore.Http.Extensions;
 @using Newtonsoft.Json;
 @using System.Diagnostics.CodeAnalysis;
 @using fstools.Models;
@@ -14,53 +15,60 @@
 <h1>Charts</h1>
 
 <Collapse>
-<CollapseItems>
-    <CollapseItem Text="Search" Class=""  IsCollapsed="false">
-<div class="row g-3">
-    <div class="col-2">
-        <BootstrapInput PlaceHolder="ICAO."
-           TValue="string"
-            @bind-Value="@ChartSvc.CurrentIcao"
-           IsAutoFocus="true"
-           IsSelectAllTextOnFocus="true"
-           ShowLabel="true"
-           OnEnterAsync="OnEnterAsync"
-           DisplayText="Enter ICAO" />
-    </div>
-    <div class="col-2">
-        <Button style="margin-top:27px" ButtonStyle="ButtonStyle.Round" Color="Color.Primary" OnClick="Search">Search</Button>
-    </div>
-    @if (charts != null && charts.ICAO.Count > 0)
-    {    
-        <div class="col-8">
-            <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.Chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
-                 <BodyTemplate>
-                     <Card>
-                         <BodyTemplate>
-                                @context.Chart_name
-                          </BodyTemplate>
-                     </Card>                     
-                </BodyTemplate>
-            </ListView>
-        </div>
-    }
-    else if (showChartFox)
-    {
-        <div class="row g-3">
-            <div class="row-5">
-                <Button style="margin-top:27px" ButtonStyle="ButtonStyle.Round" 
-                    Color="Color.Primary" 
-                    OnClick="OpenChartFox">Not found, try in ChartFox (login credentials required)
-                </Button>
+    <CollapseItems>
+        <CollapseItem Text="Search" Class=""  IsCollapsed="false">
+            <div class="row g-3">
+                <div class="col-2">
+                    <BootstrapInput PlaceHolder="ICAO."
+                       TValue="string"
+                        @bind-Value="@ChartSvc.CurrentIcao"
+                       IsAutoFocus="true"
+                       IsSelectAllTextOnFocus="true"
+                       ShowLabel="true"
+                       OnEnterAsync="OnEnterAsync"
+                       DisplayText="Enter ICAO" />
+                </div>
+
+                <div class="col-2">
+                    <Button style="margin-top:27px" 
+                        ButtonStyle="ButtonStyle.Round" 
+                        Color="Color.Primary" 
+                        OnClick="Search">Search</Button>
+                </div>
+    
+                @if (charts != null && charts.ICAO.Count > 0)
+                {    
+                    <div class="col-8">
+                        <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.Chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
+                             <BodyTemplate>
+                                 <Card>
+                                     <BodyTemplate>
+                                            @context.Chart_name
+                                      </BodyTemplate>
+                                 </Card>                     
+                            </BodyTemplate>
+                        </ListView>
+                    </div>
+                }
+                else if (showChartFox)
+                {
+                    <div class="row g-3">
+                        <div class="row-5">
+                            <Button style="margin-top:27px" ButtonStyle="ButtonStyle.Round" 
+                                Color="Color.Primary" 
+                                OnClick="OpenChartFox">Not found, try in ChartFox (login credentials required)
+                            </Button>
+                        </div>
+                    </div>
+                }
             </div>
-        </div>
-    }
-</div>
-</CollapseItem>
-</CollapseItems>
+        </CollapseItem>
+    </CollapseItems>
 </Collapse>
+
 <div class="row g-3">
     <div class="col-12">
+        <section id="chart"/>
         @if (ChartSvc.ShowPdf)
         {
             <PdfReader @ref="PdfReader" FileName="@ChartSvc.Pdf"  Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px"/>
@@ -98,7 +106,6 @@
         }
     }
 
-
     private async Task OnEnterAsync(string icao)
     {
         await PerformSearch(icao);
@@ -121,7 +128,7 @@
         response = response
             .Replace($"\"{icao}\":", "\"ICAO\":")
             .Replace($"\"K{icao}\":", "\"ICAO\":")
-            .Replace("\"ADP\"", "\"Airport Diagram\"")
+            .Replace("\"APD\"", "\"Airport Diagram\"")
             .Replace("\"DP\"", "\"Departures (SID)\"")
             .Replace("\"HOT\"", "\"Hot Spots\"")
             .Replace("\"IAP\"", "\"Approaches\"")
@@ -135,6 +142,7 @@
         if (charts.ICAO.Count.Equals(0))
         {
             showChartFox = true;
+            ChartSvc.ShowPdf = false;
         }
         //skyvector integration, only US as well :(
         //Scrape s = new Scrape();
@@ -154,7 +162,8 @@
             await PdfReader!.Refresh();
         }
 
-        await InvokeAsync(StateHasChanged);        
+        await InvokeAsync(StateHasChanged);   
+        await jsRuntime.InvokeVoidAsync("scrollIntoView", "chart");
     }
 
     public async Task OpenChartFox()
