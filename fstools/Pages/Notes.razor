@@ -5,8 +5,21 @@
 
 <PageTitle>Notes</PageTitle>
 
-<h1>Notes</h1>
-
+<h1>
+   Notes
+    <Button style="margin-left:200px"
+        ButtonStyle="ButtonStyle.Round"
+        Color="Color.Primary"
+        OnClick="SetDefault">
+        Default
+    </Button>
+    <Button
+            ButtonStyle="ButtonStyle.Round"
+            Color="Color.Primary"
+            OnClick="Clear">
+        Clear
+    </Button>
+</h1>
 <Editor ShowSubmit="false" @bind-Value="@NotesData.Notes" IsEditor="true" Height="900" ToolbarItems="@ToolbarItems" />
 
 @code
@@ -63,4 +76,15 @@
             }
         },
     };
+
+
+    public void Clear()
+    {
+        NotesData.Notes = String.Empty;
+    }
+
+    public void SetDefault()
+    {
+        NotesData.SetDefault();
+    }
 }

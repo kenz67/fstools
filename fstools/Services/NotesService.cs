@@ -12,6 +12,11 @@
 
         public NotesService()
         {
+            SetDefault();
+        }
+
+        public void SetDefault()
+        {
             Notes = defaultNotes;
         }
     }

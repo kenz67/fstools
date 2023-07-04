@@ -16,7 +16,7 @@
 
 <Collapse>
     <CollapseItems>
-        <CollapseItem Text="Search" Class=""  IsCollapsed="false">
+        <CollapseItem Text="Search" TitleColor="Color.Info" IsCollapsed="@ChartSvc.ShowPdf">
             <div class="row g-3">
                 <div class="col-2">
                     <BootstrapInput PlaceHolder="ICAO."
@@ -84,8 +84,6 @@
 
 @code {
     //TODO: first page
-    //TODO: clear notes button
-    //TODO: Menu page smaller or hide?
     //TODO: Weather page
     //TODO: EU: https://www.eurocontrol.int/service/european-ais-database     https://www.ead.eurocontrol.int/fwf-eadbasic/public/cms/cmscontent.faces?configKey=default.home.page
     //TODO: found spot for Austrailia  -  http://www.airservicesaustralia.com/aip/current/dap/AeroProcChartsTOC.htm
@@ -141,9 +139,10 @@
 
         if (charts.ICAO.Count.Equals(0))
         {
-            showChartFox = true;
-            ChartSvc.ShowPdf = false;
+            showChartFox = true;           
         }
+
+        ChartSvc.ShowPdf = false;
         //skyvector integration, only US as well :(
         //Scrape s = new Scrape();
         //charts = await s.TestScrape(icao);

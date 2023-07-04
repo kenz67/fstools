@@ -1,9 +1,10 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿<div class="top-row ps-3 navbar navbar-dark ">
     <div class="container-fluid">
-        <span class="oi oi-monitor" @onclick="ToggleIconMenu"  style="color:white;" aria-hidden="true"></span>
+        <span class="fa-solid fa-plane" @onclick="ToggleIconMenu"  style="color:white;" aria-hidden="true"></span>
         @if (!@IconMenuActive)
         {
-            <a class="navbar-brand" href="">FS Tools</a>
+            <span class="navbar-brand" @onclick="ToggleIconMenu" style="color:white;" aria-hidden="true">FS Tools</span>
+            @*<a class="navbar-brand" href="">FS Tools</a>*@
         }
         
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
