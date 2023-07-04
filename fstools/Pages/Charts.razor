@@ -7,6 +7,7 @@
 @using fstools.Services;
 
 @inject ChartService ChartSvc;
+@inject IJSRuntime jsRuntime;
 
 <PageTitle>Charts</PageTitle>
 
@@ -43,6 +44,17 @@
             </ListView>
         </div>
     }
+    else if (showChartFox)
+    {
+        <div class="row g-3">
+            <div class="row-5">
+                <Button style="margin-top:27px" ButtonStyle="ButtonStyle.Round" 
+                    Color="Color.Primary" 
+                    OnClick="OpenChartFox">Not found, try in ChartFox (login credentials required)
+                </Button>
+            </div>
+        </div>
+    }
 </div>
 </CollapseItem>
 </CollapseItems>
@@ -63,16 +75,18 @@
 
 
 @code {
-    //TODO:  not found on chart search
     //TODO: first page
     //TODO: clear notes button
-    //TODO: Remember Chart
     //TODO: Menu page smaller or hide?
     //TODO: Weather page
+    //TODO: EU: https://www.eurocontrol.int/service/european-ais-database     https://www.ead.eurocontrol.int/fwf-eadbasic/public/cms/cmscontent.faces?configKey=default.home.page
+    //TODO: found spot for Austrailia  -  http://www.airservicesaustralia.com/aip/current/dap/AeroProcChartsTOC.htm
+
     PdfReader PdfReader { get; set; }
 
     private HttpClient client = new HttpClient();
     private ChartList charts;
+    private bool showChartFox = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,7 +131,15 @@
             .Replace("\"LAH\"", "\"Land and Hold Short\"")
             ;
         charts = JsonConvert.DeserializeObject<ChartList>(response);
-        ChartSvc.ShowPdf = false;
+
+        if (charts.ICAO.Count.Equals(0))
+        {
+            showChartFox = true;
+        }
+        //skyvector integration, only US as well :(
+        //Scrape s = new Scrape();
+        //charts = await s.TestScrape(icao);
+        //ChartSvc.ShowPdf = false;
     }
 
     private async Task SelectedItem(Chart chart)
@@ -133,5 +155,11 @@
         }
 
         await InvokeAsync(StateHasChanged);        
+    }
+
+    public async Task OpenChartFox()
+    {
+        var url = $"https://chartfox.org/{ChartSvc.CurrentIcao}";
+        await jsRuntime.InvokeVoidAsync("blazorOpen", url, "cf");
     }
 }
