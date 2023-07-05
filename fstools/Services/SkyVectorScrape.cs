@@ -1,75 +1,74 @@
 ﻿using fstools.Models;
 using HtmlAgilityPack;
 
-namespace fstools.Services
+namespace fstools.Services;
+
+public class SkyVectorScrape
 {
-    public class SkyVectorScrape
+    private readonly ChartList charts = new();
+
+    public async Task<ChartList> TestScrape(string ICAO)
     {
-        readonly ChartList charts = new();
+        charts.ICAO = new List<Chart>();
 
-        public async Task<ChartList> TestScrape(string ICAO)
+        var web = new HtmlWeb();
+        var doc = await web.LoadFromWebAsync($"https://skyvector.com/api/airportSearch?query={ICAO}");
+        var aptData = doc.DocumentNode.SelectNodes("//div[@class='aptdata']");
+        var l = new List<string>();
+        foreach (var apt in aptData)
         {
-            charts.ICAO = new List<Chart>();
-
-            var web = new HtmlWeb();
-            var doc = await web.LoadFromWebAsync($"https://skyvector.com/api/airportSearch?query={ICAO}");
-            var aptData = doc.DocumentNode.SelectNodes("//div[@class='aptdata']");
-            var l = new List<string>();
-            foreach (var apt in aptData)
+            if (apt.InnerHtml.Contains("Airport Diagram"))
             {
-                if (apt.InnerHtml.Contains("Airport Diagram"))
-                {
-                    ProcessAirportDiagram(apt);
-                }
-                else if (apt.InnerHtml.Contains("Approach Procedure (IAP) Charts"))
-                {
-                    ProcessApproach("Approaches", apt);
-                }
-                else if (apt.InnerHtml.Contains("Terminal Arrival (STAR) Charts"))
-                {
-                    ProcessApproach("Arrivals (STAR)", apt);
-                }
-                else if (apt.InnerHtml.Contains("Procedure (DP) Charts"))
-                {
-                    ProcessApproach("Departures (SID)", apt);
-                }
-                else if (apt.InnerHtml.Contains("Weather Minimums"))
-                {
-                    ProcessApproach("Minimums", apt);
-                }
-
-                l.Add(apt.InnerText);
+                ProcessAirportDiagram(apt);
+            }
+            else if (apt.InnerHtml.Contains("Approach Procedure (IAP) Charts"))
+            {
+                ProcessApproach("Approaches", apt);
+            }
+            else if (apt.InnerHtml.Contains("Terminal Arrival (STAR) Charts"))
+            {
+                ProcessApproach("Arrivals (STAR)", apt);
+            }
+            else if (apt.InnerHtml.Contains("Procedure (DP) Charts"))
+            {
+                ProcessApproach("Departures (SID)", apt);
+            }
+            else if (apt.InnerHtml.Contains("Weather Minimums"))
+            {
+                ProcessApproach("Minimums", apt);
             }
 
-            return charts;
+            l.Add(apt.InnerText);
         }
 
-        private void ProcessAirportDiagram(HtmlNode html)
-        {
-            var title = html.SelectSingleNode(".//div[@class='aptdatatitle']");
-            var anchors = html.SelectNodes(".//a");
-            var links = anchors.Select(a => a.Attributes["href"].Value).ToList();
+        return charts;
+    }
 
+    private void ProcessAirportDiagram(HtmlNode html)
+    {
+        var title = html.SelectSingleNode(".//div[@class='aptdatatitle']");
+        var anchors = html.SelectNodes(".//a");
+        var links = anchors.Select(a => a.Attributes["href"].Value).ToList();
+
+        charts.ICAO.Add(new Chart
+        {
+            Chart_code = "Airport Diagram",
+            Chart_name = title.InnerHtml,
+            Pdf_path = $"https://skyvector.com/{links[0]}"
+        });
+    }
+
+    private void ProcessApproach(string Title, HtmlNode html)
+    {
+        var anchors = html.SelectNodes(".//a");
+        foreach (var app in anchors)
+        {
             charts.ICAO.Add(new Chart
             {
-                Chart_code = "Airport Diagram",
-                Chart_name = title.InnerHtml,
-                Pdf_path = $"https://skyvector.com/{links[0]}"
+                Chart_code = Title,
+                Chart_name = app.InnerText.Trim(),
+                Pdf_path = $"https://skyvector.com/{app.Attributes["href"].Value}"
             });
-        }
-
-        private void ProcessApproach(string Title, HtmlNode html)
-        {
-            var anchors = html.SelectNodes(".//a");
-            foreach (var app in anchors)
-            {
-                charts.ICAO.Add(new Chart
-                {
-                    Chart_code = Title,
-                    Chart_name = app.InnerText.Trim(),
-                    Pdf_path = $"https://skyvector.com/{app.Attributes["href"].Value}"
-                });
-            }
         }
     }
 }

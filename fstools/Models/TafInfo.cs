@@ -1,6 +1,5 @@
 ﻿namespace fstools.Models;
 
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 public class TafInfo
 {
     public TafData TafData { get; set; }

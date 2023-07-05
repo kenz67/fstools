@@ -1,10 +1,9 @@
 ﻿using fstools.Models;
 
-namespace fstools.Services
+namespace fstools.Services;
+
+public class WeatherService
 {
-    public class WeatherService
-    {
-        public string ICAO { get; set; }
-        public WeatherInfo WxInfo { get; set; }
-    }
+    public string ICAO { get; set; }
+    public WeatherInfo WxInfo { get; set; }
 }
