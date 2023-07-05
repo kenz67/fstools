@@ -1,10 +1,7 @@
 ﻿@page "/weather"
 @using BootstrapBlazor.Components
-@using Microsoft.AspNetCore.Http.Extensions;
 @using Newtonsoft.Json;
-@using System.Diagnostics.CodeAnalysis;
 @using fstools.Models;
-@using System.ComponentModel;
 @using fstools.Services;
 
 @inject WeatherService WxSvc;
@@ -21,7 +18,7 @@
                 <div class="col-2">
                     <BootstrapInput PlaceHolder="ICAO."
                        TValue="string"
-                        @bind-Value="@WxSvc.SearchString"
+                        @bind-Value="@WxSvc.ICAO"
                        IsAutoFocus="true"
                        IsSelectAllTextOnFocus="true"
                        ShowLabel="true"
@@ -42,22 +39,18 @@
 @if (!String.IsNullOrEmpty(WxSvc.WxInfo?.ICAO))
 {
     <div class="row g-3" style="margin-top:20px">
-    <div class="col-5">
+    <div class="col-lg-4 col-12">
         <MetarComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Metar" />
+    </div>
+      
+        <div class="col-lg-4 col-12">
+            <TafComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Taf" />
         </div>
     </div>
 }
 
-@*<div class="row g-3">
-    <div class="col-12">
-        <section id="chart"/>
-        @if (WxSvc.CurrentWeather != null)
-        {
-            <Label>Weather</Label>
-        }
-    </div>
-</div>*@
 <div class="row g-3">
+    <br />
     <div class="col-12">
         Use with caution. The owner of this webpage not responsible for any misuse of outdated charts or other information as it is intended for flight simulation use. Please confirm the cycle dates prior to use of any data.
     </div>
@@ -67,14 +60,6 @@
 @code {
     private HttpClient client = new HttpClient();
 
-    //protected override void OnInitialized()
-    //{           
-    //    if (WxSvc.WxInfo == null)
-    //    {
-    //        WxSvc.WxInfo = new WeatherInfo();
-    //    }
-    //}
-
     private async Task OnEnterAsync(string icao)
     {
         await PerformSearch(icao);
@@ -83,12 +68,12 @@
 
     private async Task Search()
     {
-        await PerformSearch(WxSvc.SearchString);
+        await PerformSearch(WxSvc.ICAO);
     }
 
     private async Task PerformSearch(string icao)
     {
-        WxSvc.SearchString = icao;
+        WxSvc.ICAO = icao;
         WxSvc.WxInfo = new WeatherInfo();
         if (string.IsNullOrEmpty(icao?.Trim()))
         {
@@ -105,7 +90,6 @@
                 ;
 
             WxSvc.WxInfo.Metar = JsonConvert.DeserializeObject<MetarInfo>(response);
-            WxSvc.WxInfo.ICAO = icao;
         }
         //catch (HttpRequestException wex)
         //{            
@@ -116,8 +100,27 @@
             WxSvc.WxInfo.Metar = null;
         }
 
+        try
+        {
+            WxSvc.WxInfo.ICAO = icao;
+            var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/weather/taf?apt={icao}");
+            response = response
+                .Replace($"\"{icao}\":", "\"TafData\":")
+                .Replace($"\"K{icao}\":", "\"TafData\":")
+                ;
+
+            WxSvc.WxInfo.Taf = JsonConvert.DeserializeObject<TafInfo>(response);    
+        }
+        //catch (HttpRequestException wex)
+        //{
+        //    WxSvc.CurrentWeather = null;
+        //}
+        catch
+        {
+            WxSvc.WxInfo.Taf = null;
+        }
+
         await InvokeAsync(StateHasChanged);
-        //TODO Handle multiple comma separated???
         //Get TAF as well as Metar?
     }
     }

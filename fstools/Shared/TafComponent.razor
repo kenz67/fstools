@@ -1,0 +1,54 @@
+﻿@using BootstrapBlazor.Components
+@using fstools.Models;
+@using fstools.Services;
+
+
+<Collapse>
+    <CollapseItems>
+        <CollapseItem Text="@Title()" TitleColor="Color.Primary" IsCollapsed="false">
+            @if (WeatherInfo != null)
+            {
+                <div class="row g-3">
+                    <div class="col-12">
+                        <b>Issue Time:</b> @WeatherInfo.TafData.Issue_time
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <b>Valid Timwe:</b> @WeatherInfo.TafData.Valid_time
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <b>Raw TAF:</b>
+                        <ul>
+                            @foreach (var c in WeatherInfo.TafData.Line_by_line)
+                            {
+                                <li>@c</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <label>TAF data not found</label>
+            }
+        </CollapseItem>
+    </CollapseItems>
+</Collapse>
+
+       
+@code {
+    [Parameter]
+    public String ICAO { get; set; }
+
+    [Parameter]
+    public TafInfo WeatherInfo { get; set; }
+
+
+    protected string Title()
+    {
+        return $"TAF for {ICAO.ToUpper()}";
+    }
+}

@@ -30,7 +30,15 @@
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Wind:</b> @WeatherInfo.WeatherData.Wind degrees @WeatherInfo.WeatherData.Wind_vel knots
+                        @if (WeatherInfo.WeatherData.Wind.Equals("0"))
+                        {
+                            <label><b>Wind:</b> Calm</label>
+                        }
+                        else
+                        {
+                            <label><b>Wind:</b> @WeatherInfo.WeatherData.Wind degrees at @WeatherInfo.WeatherData.Wind_vel knots</label>
+                        }
+                    
                     </div>
                 </div>
                 <div class="row g-3">
@@ -72,7 +80,6 @@
 
        
 @code {
-    //TODO: Calm wind?
     [Parameter]
     public String ICAO { get; set; }
 
@@ -84,15 +91,4 @@
     {
         return $"METAR for {ICAO.ToUpper()}";
     }
-
-    protected override void OnInitialized()
-    {
-        //metarText = $"METAR for {ICAO.ToUpper()}";
-    }
-
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    metarText = $"METAR for {ICAO}";
-    //    await InvokeAsync(StateHasChanged);
-    //}
 }

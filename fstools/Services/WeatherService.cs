@@ -4,7 +4,7 @@ namespace fstools.Services
 {
     public class WeatherService
     {
-        public string SearchString { get; set; }
+        public string ICAO { get; set; }
         public WeatherInfo WxInfo { get; set; }
     }
 }
