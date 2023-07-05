@@ -21,7 +21,7 @@
                 <div class="col-2">
                     <BootstrapInput PlaceHolder="ICAO."
                        TValue="string"
-                                    @bind-Value="@WxSvc.CurrentIcao"
+                        @bind-Value="@WxSvc.SearchString"
                        IsAutoFocus="true"
                        IsSelectAllTextOnFocus="true"
                        ShowLabel="true"
@@ -39,11 +39,11 @@
         </CollapseItem>
     </CollapseItems>
 </Collapse>
-@if (WxSvc.CurrentWeather != null)
+@if (!String.IsNullOrEmpty(WxSvc.WxInfo?.ICAO))
 {
     <div class="row g-3" style="margin-top:20px">
     <div class="col-5">
-        <MetarComponent ICAO="@WxSvc.CurrentIcao" WeatherInfo="@WxSvc.CurrentWeather" />
+        <MetarComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Metar" />
         </div>
     </div>
 }
@@ -67,10 +67,13 @@
 @code {
     private HttpClient client = new HttpClient();
 
-    protected override async Task OnInitializedAsync()
-    {
-        WxSvc.CurrentIcao = "koxc";
-    }
+    //protected override void OnInitialized()
+    //{           
+    //    if (WxSvc.WxInfo == null)
+    //    {
+    //        WxSvc.WxInfo = new WeatherInfo();
+    //    }
+    //}
 
     private async Task OnEnterAsync(string icao)
     {
@@ -80,11 +83,13 @@
 
     private async Task Search()
     {
-        await PerformSearch(WxSvc.CurrentIcao);
+        await PerformSearch(WxSvc.SearchString);
     }
 
     private async Task PerformSearch(string icao)
     {
+        WxSvc.SearchString = icao;
+        WxSvc.WxInfo = new WeatherInfo();
         if (string.IsNullOrEmpty(icao?.Trim()))
         {
             return;
@@ -92,24 +97,27 @@
         icao = icao.Trim().ToUpper();
         try
         {
+            WxSvc.WxInfo.ICAO = icao;
             var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/weather/metar?apt={icao}");
             response = response
                 .Replace($"\"{icao}\":", "\"WeatherData\":")
                 .Replace($"\"K{icao}\":", "\"WeatherData\":")
                 ;
 
-            WxSvc.CurrentWeather = JsonConvert.DeserializeObject<WeatherInfo>(response);
-            WxSvc.CurrentIcao = icao;
+            WxSvc.WxInfo.Metar = JsonConvert.DeserializeObject<MetarInfo>(response);
+            WxSvc.WxInfo.ICAO = icao;
         }
-        catch (HttpRequestException wex)
+        //catch (HttpRequestException wex)
+        //{            
+        //    WxSvc.CurrentWeather = null;
+        //}
+        catch
         {
-            //TODO Handle
-            int i = 0;
-            i++;
+            WxSvc.WxInfo.Metar = null;
         }
 
         await InvokeAsync(StateHasChanged);
-        //TODO Handle multiple comma separated
-        //Get TAGF as well as Metar?
+        //TODO Handle multiple comma separated???
+        //Get TAF as well as Metar?
     }
-}
+    }
