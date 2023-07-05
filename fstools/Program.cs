@@ -9,6 +9,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<TimerService>();
 builder.Services.AddSingleton<ChartService>();
 builder.Services.AddSingleton<NotesService>();
+builder.Services.AddSingleton<WeatherService>();
 
 var app = builder.Build();
 
@@ -30,3 +31,9 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+//
+//TODO: first page
+//TODO: Weather page
+//TODO: EU: https://www.eurocontrol.int/service/european-ais-database     https://www.ead.eurocontrol.int/fwf-eadbasic/public/cms/cmscontent.faces?configKey=default.home.page
+//TODO: found spot for Austrailia  -  http://www.airservicesaustralia.com/aip/current/dap/AeroProcChartsTOC.htm

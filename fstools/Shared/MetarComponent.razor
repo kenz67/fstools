@@ -1,0 +1,81 @@
+﻿@using BootstrapBlazor.Components
+@using fstools.Models;
+@using fstools.Services;
+
+
+<Collapse>
+    <CollapseItems>
+        <CollapseItem Text="@metarText" TitleColor="Color.Primary" IsCollapsed="false">
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Raw METAR:</b> @WeatherInfo.WeatherData.Raw
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Report Time:</b> @WeatherInfo.WeatherData.Time_of_obs
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Flight Category:</b> @WeatherInfo.WeatherData.Category
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Temperature/Dewpoint:</b> @WeatherInfo.WeatherData.Temp / @WeatherInfo.WeatherData.Dewpoint
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Wind:</b> @WeatherInfo.WeatherData.Wind degrees @WeatherInfo.WeatherData.Wind_vel knots
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Visibility:</b> @WeatherInfo.WeatherData.Visibility statute miles
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Altimeter:</b> @WeatherInfo.WeatherData.Alt_hg hg / @WeatherInfo.WeatherData.Alt_mb mb
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-12">
+                    <b>Sky Conditions:</b>
+                    <ul>
+                        @foreach (var c in WeatherInfo.WeatherData.Sky_conditions)
+                        {
+                            <li>@c.Coverage at @c.Base_agl' AGL</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </CollapseItem>
+    </CollapseItems>
+</Collapse>
+
+       
+@code {
+    //TODO: Calm wind?
+    //TODO: degfrees sign/C
+    [Parameter]
+    public String ICAO { get; set; }
+
+    [Parameter]
+    public WeatherInfo WeatherInfo { get; set; }
+
+    string metarText;
+
+    protected override void OnInitialized()
+    {
+        metarText = $"METAR for {ICAO.ToUpper()}";        
+    }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    metarText = $"METAR for {ICAO}";
+    //    await InvokeAsync(StateHasChanged);
+    //}
+}
