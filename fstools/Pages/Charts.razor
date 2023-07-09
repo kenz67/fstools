@@ -43,7 +43,12 @@
                              <BodyTemplate>
                                  <Card>
                                      <BodyTemplate>
+                                        <Button
+                                            ButtonStyle="ButtonStyle.Round"
+                                            Color="Color.Primary"
+                                            OnClick="() => SelectedItem(context)">
                                             @context.Chart_name
+                                        </Button>                                            
                                       </BodyTemplate>
                                  </Card>                     
                             </BodyTemplate>
@@ -147,7 +152,7 @@
     private async Task SelectedItem(Chart chart)
     {
         ChartSvc.Pdf = chart.Pdf_path;
-        ChartSvc.ShowPdf = true;
+        //ChartSvc.ShowPdf = true;
         if (PdfReader != null)
         {
             //for some reason, it is one behind so need to refresh twice
@@ -157,7 +162,8 @@
         }
 
         await InvokeAsync(StateHasChanged);   
-        await jsRuntime.InvokeVoidAsync("scrollIntoView", "chart");
+        //await jsRuntime.InvokeVoidAsync("scrollIntoView", "chart");
+        await jsRuntime.InvokeVoidAsync("blazorOpen", chart.Pdf_path, "chart");
     }
 
     public async Task OpenChartFox()

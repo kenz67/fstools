@@ -32,8 +32,8 @@
     <script src="_framework/blazor.server.js"></script>
     <script src="css/BootstrapBlazor/js/bootstrap.blazor.bundle.min.js"></script>
     <script>
-        window.blazorOpen = (url, title) => {
-            window.open(url, title);
+        window.blazorOpen = (url, target) => {
+            var w = window.open(url, target);           
         };
 
         function scrollIntoView(elementId) {

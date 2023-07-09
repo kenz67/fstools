@@ -6,10 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddBootstrapBlazor();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<TimerService>();
-builder.Services.AddSingleton<ChartService>();
-builder.Services.AddSingleton<NotesService>();
-builder.Services.AddSingleton<WeatherService>();
+builder.Services.AddScoped<TimerService>();
+builder.Services.AddScoped<ChartService>();
+builder.Services.AddScoped<NotesService>();
+builder.Services.AddScoped<WeatherService>();
 
 var app = builder.Build();
 
