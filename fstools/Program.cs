@@ -3,13 +3,14 @@ using fstools.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddBootstrapBlazor();
-builder.Services.AddRazorPages();
+builder.Services.AddBootstrapBlazor().AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<TimerService>();
-builder.Services.AddScoped<ChartService>();
-builder.Services.AddScoped<NotesService>();
-builder.Services.AddScoped<WeatherService>();
+
+builder.Services.AddScoped<TimerService>()
+    .AddScoped<ChartService>()
+    .AddScoped<NotesService>()
+    .AddScoped<WeatherService>()
+    .AddScoped<BrowserService>();
 
 var app = builder.Build();
 
@@ -34,5 +35,6 @@ app.Run();
 
 //
 //TODO: first page
+//Checklist page?
 //TODO: EU: https://www.eurocontrol.int/service/european-ais-database     https://www.ead.eurocontrol.int/fwf-eadbasic/public/cms/cmscontent.faces?configKey=default.home.page
 //TODO: found spot for Austrailia  -  http://www.airservicesaustralia.com/aip/current/dap/AeroProcChartsTOC.htm

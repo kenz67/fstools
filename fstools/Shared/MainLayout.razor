@@ -3,7 +3,8 @@
 
 @inherits LayoutComponentBase
 @inject TimerService Timers
-
+@inject IJSRuntime jsRuntime;
+@inject BrowserService browser;
 <PageTitle>FS Tools</PageTitle>
 
 
@@ -21,6 +22,12 @@
                 <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
             </div>*@
         </div>
+@*        <div class="row">
+            <div class="col-12">
+                <p>@browser.Full</p>
+                
+            </div>
+        </div>*@
 
         <article class="content px-4">
             @Body
@@ -36,5 +43,10 @@
     protected void ToggleIconMenu(bool iconMenuActive)
     {
         _iconMenuActive = iconMenuActive;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool _)
+    {
+        await browser.GetData();
     }
 }

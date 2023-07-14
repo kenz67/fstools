@@ -8,6 +8,7 @@
 @using fstools.Services;
 
 @inject ChartService ChartSvc;
+@inject BrowserService BrowserSvc;
 @inject IJSRuntime jsRuntime;
 
 <PageTitle>Charts</PageTitle>
@@ -39,17 +40,21 @@
                 @if (charts != null && charts.ICAO.Count > 0)
                 {    
                     <div class="col-8">
-                        <ListView aria-hidden="true" TItem="Chart" GroupName="@(p => p.Chart_code)"  Collapsable="true" IsAccordion="true" Items="@charts.ICAO" OnListViewItemClick="SelectedItem">
+                        <ListView aria-hidden="true" 
+                                TItem="Chart" 
+                                GroupName="@(p => p.Chart_code)"  
+                                Collapsable="true"
+                                IsAccordion="true" Items="@charts.ICAO">
                              <BodyTemplate>
-                                 <Card>
+                                 <Card>                                                                          
                                      <BodyTemplate>
                                         <Button
                                             ButtonStyle="ButtonStyle.Round"
                                             Color="Color.Primary"
                                             OnClick="() => SelectedItem(context)">
-                                            @context.Chart_name
-                                        </Button>                                            
-                                      </BodyTemplate>
+                                                @context.Chart_name
+                                        </Button>                                        
+                                    </BodyTemplate>
                                  </Card>                     
                             </BodyTemplate>
                         </ListView>
@@ -74,7 +79,7 @@
 <div class="row g-3">
     <div class="col-12">
         <section id="chart"/>
-        @if (ChartSvc.ShowPdf)
+        @if (BrowserSvc.CanDisplayPdf() && ChartSvc.ShowPdf)
         {
             <PdfReader @ref="PdfReader" FileName="@ChartSvc.Pdf"  Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px"/>
         }
@@ -117,10 +122,12 @@
 
     private async Task PerformSearch(string icao)
     {
+        ChartSvc.ShowPdf = false;
         if (string.IsNullOrEmpty(icao?.Trim()))
         {
             return;
         }
+
         icao = icao.Trim().ToUpper();
         var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/charts?apt={icao}");
         response = response
@@ -142,7 +149,6 @@
             showChartFox = true;           
         }
 
-        ChartSvc.ShowPdf = false;
         //skyvector integration, only US as well :(
         //Scrape s = new Scrape();
         //charts = await s.TestScrape(icao);
@@ -152,18 +158,25 @@
     private async Task SelectedItem(Chart chart)
     {
         ChartSvc.Pdf = chart.Pdf_path;
-        //ChartSvc.ShowPdf = true;
-        if (PdfReader != null)
-        {
-            //for some reason, it is one behind so need to refresh twice
-            await PdfReader!.Refresh();   
-            await InvokeAsync(StateHasChanged);
-            await PdfReader!.Refresh();
-        }
 
-        await InvokeAsync(StateHasChanged);   
-        //await jsRuntime.InvokeVoidAsync("scrollIntoView", "chart");
-        await jsRuntime.InvokeVoidAsync("blazorOpen", chart.Pdf_path, "chart");
+        if (BrowserSvc.CanDisplayPdf())
+        {
+            ChartSvc.ShowPdf = true;
+            if (PdfReader != null)
+            {
+                //for some reason, it is one behind so need to refresh twice
+                await PdfReader!.Refresh();
+                await InvokeAsync(StateHasChanged);
+                await PdfReader!.Refresh();
+            }
+
+            await InvokeAsync(StateHasChanged);
+            await jsRuntime.InvokeVoidAsync("scrollIntoView", "chart");
+        }
+        else
+        {
+            await jsRuntime.InvokeVoidAsync("blazorOpen", chart.Pdf_path, chart.Chart_name.Replace(" ", String.Empty));
+        }
     }
 
     public async Task OpenChartFox()
