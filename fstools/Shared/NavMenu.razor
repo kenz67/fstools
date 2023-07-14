@@ -1,4 +1,7 @@
-﻿<div class="top-row ps-3 navbar navbar-dark ">
+﻿@using fstools.Services;
+@inject SettingsService SettingsService;
+
+<div class="top-row ps-3 navbar navbar-dark ">
     <div class="container-fluid">
         <span class="fa-solid fa-plane" @onclick="ToggleIconMenu"  style="color:white;" aria-hidden="true"></span>
         @if (!@IconMenuActive)
@@ -60,6 +63,18 @@
                 }
             </NavLink>
         </div>
+        @if (SettingsService.ShowCl)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="checklists">
+                    <span class="oi oi-circle-check" aria-hidden="true"></span>
+                    @if (!@IconMenuActive)
+                    {
+                        <label>Check List</label>
+                    }
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 

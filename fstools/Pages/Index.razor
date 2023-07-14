@@ -1,7 +1,26 @@
 ﻿@page "/"
 
+@using Microsoft.AspNetCore.WebUtilities
+@using fstools.Services;
+
+@inject NavigationManager NavManager
+@inject SettingsService SettingsService;
+
 <PageTitle>FS Tools</PageTitle>
 
 <h1>FS Tools</h1>
 
 This application is a set of tools meant to be used with flight simulator software and NOT real world applications.  Use with caution. The owner of this webpage not responsible for any misuse of outdated charts or other information as it is intended for flight simulation use. Please confirm the cycle dates prior to use of any data.
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+        if (queryStrings.TryGetValue("showCL", out var showCL))
+        {
+            SettingsService.ShowCl = true;
+        }
+    }
+}

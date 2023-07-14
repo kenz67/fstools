@@ -10,7 +10,8 @@ builder.Services.AddScoped<TimerService>()
     .AddScoped<ChartService>()
     .AddScoped<NotesService>()
     .AddScoped<WeatherService>()
-    .AddScoped<BrowserService>();
+    .AddScoped<BrowserService>()
+    .AddScoped<SettingsService>();
 
 var app = builder.Build();
 

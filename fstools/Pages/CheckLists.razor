@@ -1,0 +1,165 @@
+﻿@page "/checklists"
+
+@using BootstrapBlazor.Components
+
+<PageTitle>Check Lists</PageTitle>
+
+<h1>Check Lists</h1>
+
+<Collapse IsAccordion="true">
+    <CollapseItems>
+        <CollapseItem Text="Beech Bonanza G36" TitleColor="Color.Primary" IsCollapsed="false">
+            <Tab IsBorderCard="true" ShowExtendButtons="false">
+                <TabItem Text="Speeds">
+                    <div class="row">
+                        <div class="col-2"><b>Reference</b></div>
+                        <div class="col-2"><b>Speed (KIAS)</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vle (Landing Geear)</div>
+                        <div class="col-2">154</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vne (Never Exceed)</div>
+                        <div class="col-2">163</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Va (Manuever Spped)</div>
+                        <div class="col-2">90 - 105</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vfe App</div>
+                        <div class="col-2">154</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vfe Full</div>
+                        <div class="col-2">124</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vx (Best angle of climb)</div>
+                        <div class="col-2">84</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vy (Best rate of climb)</div>
+                        <div class="col-2">110</div>
+                    </div>
+                </TabItem>
+                <TabItem Text="Start">
+                    <div class="row">
+                        <div class="col-2"><b>Parking Brake</b></div>
+                        <div class="col-2"><b>SET</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Fuel Shutoff</b></div>
+                        <div class="col-2">On</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Fuel Selector</b></div>
+                        <div class="col-2">As Appropriate</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Lights</b></div>
+                        <div class="col-2">As Needed</div>
+                    </div>
+                </TabItem>
+                <TabItem Text="Takeoff">
+                    <div class="row">
+                        <div class="col-2"><b>Flaps</b></div>
+                        <div class="col-2">1 notch</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Trim</b></div>
+                        <div class="col-2">For Takeoff</div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-2">Vx (Best angle of climb)</div>
+                        <div class="col-2">84</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vy (Best rate of climb)</div>
+                        <div class="col-2">110</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Retract flaps above 84 KIAS</div>
+                    </div>
+                </TabItem>
+            </Tab>
+        </CollapseItem>
+
+        <CollapseItem Text="Cessna 172" TitleColor="Color.Primary" IsCollapsed="true">
+            <Tab IsBorderCard="true" ShowExtendButtons="false">
+                <TabItem Text="Speeds">
+                   <div class="row">
+                       <div class="col-2"><b>Reference</b></div>
+                       <div class="col-2"><b>Speed (KIAS)</b></div>
+                   </div>
+                    <div class="row">
+                        <div class="col-2">Vne (Never Exceed)</div>
+                        <div class="col-2">163</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Va (Manuever Spped)</div>
+                        <div class="col-2">90 - 105</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vfe 10&deg;</div>
+                        <div class="col-2">110</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vfe > 10&deg;</div>
+                        <div class="col-2">85</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vx (Best angle of climb)</div>
+                        <div class="col-2">62</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vy (Best rate of climb)</div>
+                        <div class="col-2">74</div>
+                    </div>
+                </TabItem>
+                <TabItem Text="Start">
+                    <div class="row">
+                        <div class="col-2"><b>Parking Brake</b></div>
+                        <div class="col-2"><b>SET</b></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Fuel Shutoff</b></div>
+                        <div class="col-2">On</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Fuel Selector</b></div>
+                        <div class="col-2">Both</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Lights</b></div>
+                        <div class="col-2">As Needed</div>
+                    </div>
+                </TabItem>
+                <TabItem Text="Takeoff">
+                    <div class="row">
+                        <div class="col-2"><b>Flaps</b></div>
+                        <div class="col-2">10 &deg;</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"><b>Trim</b></div>
+                        <div class="col-2">For Takeoff</div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-2">Vx (Best angle of climb)</div>
+                        <div class="col-2">62</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">Vy (Best rate of climb)</div>
+                        <div class="col-2">74</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Retract flaps above 60KIAS</div>
+                    </div>
+                </TabItem>
+            </Tab>
+        </CollapseItem>
+    </CollapseItems>
+</Collapse>
