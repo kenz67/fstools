@@ -9,6 +9,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<TimerService>()
     .AddScoped<ChartService>()
     .AddScoped<NotesService>()
+    .AddSingleton<IcaoService>()
     .AddScoped<WeatherService>()
     .AddScoped<BrowserService>()
     .AddScoped<SettingsService>();

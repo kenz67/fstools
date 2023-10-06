@@ -1,26 +1,63 @@
 ﻿@page "/"
 
 @using Microsoft.AspNetCore.WebUtilities
+@using System.Net;
 @using fstools.Services;
+
+@using BootstrapBlazor.Components
 
 @inject NavigationManager NavManager
 @inject SettingsService SettingsService;
+@inject IcaoService icaoService;
 
 <PageTitle>FS Tools</PageTitle>
 
 <h1>FS Tools</h1>
 
-This application is a set of tools meant to be used with flight simulator software and NOT real world applications.  Use with caution. The owner of this webpage not responsible for any misuse of outdated charts or other information as it is intended for flight simulation use. Please confirm the cycle dates prior to use of any data.
-
+This application is a set of tools meant to be used with flight simulator software and NOT real world applications.  Use with caution. The owner of this webpage not responsible for any misuse of outdated charts or other information as it is intended for flight simulation use.
+<br />
+<br />
+<p class="small">This site includes IATA/ICAO List data available from http://www.ip2location.com.</p>
 @code
 {
-    protected override void OnInitialized()
+    public string icao;
+
+    protected async override void OnInitialized()
     {
+        var icaoFileName = "iata-icao.csv";
+        var icaoEndpoint = "https://raw.githubusercontent.com/ip2location/ip2location-iata-icao/master/iata-icao.csv";
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
         var queryStrings = QueryHelpers.ParseQuery(uri.Query);
         if (queryStrings.TryGetValue("showCL", out var showCL))
         {
             SettingsService.ShowCl = true;
+        }
+
+        try
+        {
+            if (!File.Exists(icaoFileName) || File.GetLastWriteTimeUtc(icaoFileName).AddDays(-1) > DateTime.UtcNow)
+            {
+                icaoService.IcaoList = null;
+                string icaoContents;
+                using (var client = new HttpClient())
+                {
+                    using (var result = await client.GetAsync(icaoEndpoint))
+                    {
+                        icaoContents = await result.Content.ReadAsStringAsync();
+                    }
+                }
+
+                File.WriteAllText(icaoFileName, icaoContents);
+            }
+
+            if (icaoService.IcaoList == null)
+            {
+                icaoService.IcaoList = File.ReadAllLines(icaoFileName).Skip(1).Select(c => c.Split(",")[3].Replace("\"", String.Empty)).Where(v => v != String.Empty).Distinct().OrderBy(v => v).ToList();
+                icaoService.IcaoList.Add(".");
+            }
+        }
+        catch
+        {
         }
     }
 }

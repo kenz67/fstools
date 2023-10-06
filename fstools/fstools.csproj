@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>   
@@ -8,11 +8,11 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="7.7.7" />
-    <PackageReference Include="BootstrapBlazor.FontAwesome" Version="7.4.2" />
-    <PackageReference Include="BootstrapBlazor.PdfReader" Version="7.1.10" />
-    <PackageReference Include="BootstrapBlazor.SummerNote" Version="7.3.2" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.48" />
+    <PackageReference Include="BootstrapBlazor" Version="7.11.0" />
+    <PackageReference Include="BootstrapBlazor.FontAwesome" Version="7.5.0" />
+    <PackageReference Include="BootstrapBlazor.PdfReader" Version="7.2.0" />
+    <PackageReference Include="BootstrapBlazor.SummerNote" Version="7.3.4" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

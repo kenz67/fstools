@@ -6,6 +6,7 @@
 
 @inject WeatherService WxSvc;
 @inject ChartService ChartSvc;
+@inject IcaoService icaoService;
 @inject IJSRuntime jsRuntime;
 
 <PageTitle>Weather</PageTitle>
@@ -16,24 +17,52 @@
     <CollapseItems>
         <CollapseItem Text="Search" TitleColor="Color.Info" IsCollapsed="false">
             <div class="row g-3">
-                <div class="col-2">
-                    <BootstrapInput PlaceHolder="ICAO."
-                       TValue="string"
-                        @bind-Value="@WxSvc.ICAO"
-                       IsAutoFocus="true"
-                       IsSelectAllTextOnFocus="true"
-                       ShowLabel="true"
-                       OnEnterAsync="OnEnterAsync"
-                       DisplayText="Enter ICAO" />
-                </div>
+                @if (icaoService.IcaoList != null)
+                {
+                    <div class="col-2">
+                        <AutoComplete @bind-Value="@WxSvc.ICAO"
+                                      Items="icaoService.IcaoList"
+                                      IsLikeMatch="true"
+                                      IgnoreCase="true"
+                                      DisplayCount="7"
+                                      OnEnterAsync="OnEnterAsync"
+                                      ShowDropdownListOnFocus="false"
+                                      PlaceHolder="ICAO"
+                                      IsSelectAllTextOnFocus="true" />
+                    </div>
 
-                <div class="col-2">
-                    <Button style="margin-top:27px" 
-                        ButtonStyle="ButtonStyle.Round" 
-                        Color="Color.Primary" 
-                        OnClick="Search">Search</Button>
-                </div>   
-             </div>
+                    <div class="col-2">
+                        <Button ButtonStyle="ButtonStyle.Round"
+                                Color="Color.Primary"
+                                OnClick="Search">
+                            Search
+                        </Button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-2">
+                        <BootstrapInput PlaceHolder="ICAO."
+                            TValue="string"
+                            @bind-Value="@WxSvc.ICAO"
+                            IsAutoFocus="true"
+                            IsSelectAllTextOnFocus="true"
+                            ShowLabel="true"
+                            OnEnterAsync="OnEnterAsync"
+                            DisplayText="Enter ICAO" />
+                    </div>
+
+                    <div class="col-2">
+                        <Button style="margin-top:27px"
+                                ButtonStyle="ButtonStyle.Round"
+                                Color="Color.Primary"
+                                OnClick="Search">
+                            Search
+                        </Button>
+                    </div>
+
+                }
+            </div>
         </CollapseItem>
     </CollapseItems>
 </Collapse>
@@ -74,7 +103,7 @@
 
     private async Task PerformSearch(string icao)
     {
-        if (icao.Equals("."))
+        if (icao.Equals(".") && !String.IsNullOrEmpty(ChartSvc.CurrentIcao))
         {
             icao = ChartSvc.CurrentIcao;
         }
