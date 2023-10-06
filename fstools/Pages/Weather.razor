@@ -5,6 +5,7 @@
 @using fstools.Services;
 
 @inject WeatherService WxSvc;
+@inject ChartService ChartSvc;
 @inject IJSRuntime jsRuntime;
 
 <PageTitle>Weather</PageTitle>
@@ -73,6 +74,10 @@
 
     private async Task PerformSearch(string icao)
     {
+        if (icao.Equals("."))
+        {
+            icao = ChartSvc.CurrentIcao;
+        }
         WxSvc.ICAO = icao;
         WxSvc.WxInfo = new WeatherInfo();
         if (string.IsNullOrEmpty(icao?.Trim()))

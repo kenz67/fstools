@@ -9,6 +9,7 @@
 @inject ChartService ChartSvc;
 @inject BrowserService BrowserSvc;
 @inject IJSRuntime jsRuntime;
+@inject WeatherService WeatherSvc;
 
 <PageTitle>Charts</PageTitle>
 
@@ -110,6 +111,11 @@
 
     private async Task OnEnterAsync(string icao)
     {
+        if (icao.Equals("."))
+        {
+            icao = WeatherSvc.ICAO;
+            ChartSvc.CurrentIcao = icao;
+        }
         await PerformSearch(icao);
         await InvokeAsync(StateHasChanged);
     }
