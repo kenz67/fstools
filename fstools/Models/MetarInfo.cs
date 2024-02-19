@@ -26,5 +26,5 @@ public class MetarInfo
 public class SkyCondition
 {
     public string Cover { get; set; }
-    public int Base { get; set; }
+    public int? Base { get; set; }
 }

@@ -43,13 +43,13 @@
                 {
                     <div class="col-2">
                         <BootstrapInput PlaceHolder="ICAO."
-                            TValue="string"
-                            @bind-Value="@WxSvc.ICAO"
-                            IsAutoFocus="true"
-                            IsSelectAllTextOnFocus="true"
-                            ShowLabel="true"
-                            OnEnterAsync="OnEnterAsync"
-                            DisplayText="Enter ICAO" />
+                                        TValue="string"
+                        @bind-Value="@WxSvc.ICAO"
+                                        IsAutoFocus="true"
+                                        IsSelectAllTextOnFocus="true"
+                                        ShowLabel="true"
+                                        OnEnterAsync="OnEnterAsync"
+                                        DisplayText="Enter ICAO" />
                     </div>
 
                     <div class="col-2">
@@ -69,12 +69,16 @@
 @if (!String.IsNullOrEmpty(WxSvc.WxInfo?.ICAO))
 {
     <div class="row g-3" style="margin-top:20px">
-    <div class="col-lg-4 col-12">
-        <MetarComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Metar" />
-    </div>
-      
+        <div class="col-lg-4 col-12">
+            <MetarComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Metar" />
+        </div>
         <div class="col-lg-4 col-12">
             <TafComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Taf" />
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="12">
+            <PirepComponent ICAO="@WxSvc?.WxInfo?.ICAO" WeatherInfo="@WxSvc?.WxInfo?.Pirep" />
         </div>
     </div>
 }
@@ -114,6 +118,8 @@
             return;
         }
         icao = icao.Trim().ToUpper();
+
+        // Get Metar Information
         try
         {
             WxSvc.WxInfo.ICAO = icao;
@@ -126,20 +132,18 @@
 
                 //    .Replace($"\"{icao}\":", "\"WeatherData\":")
                 //    .Replace($"\"K{icao}\":", "\"WeatherData\":")
-                ;          
+                ;
 
             WxSvc.WxInfo.Metar = JsonConvert.DeserializeObject<MetarInfo>(response);
 
         }
-        //catch (HttpRequestException wex)
-        //{            
-        //    WxSvc.CurrentWeather = null;
-        //}
         catch
         {
             WxSvc.WxInfo.Metar = null;
         }
 
+
+        // Get TAF Information
         try
         {
             WxSvc.WxInfo.ICAO = icao;
@@ -162,16 +166,36 @@
             }
             WxSvc.WxInfo.Taf.TafData.Line_by_line.RemoveAt(0);
         }
-        //catch (HttpRequestException wex)
-        //{
-        //    WxSvc.CurrentWeather = null;
-        //}
         catch
         {
             WxSvc.WxInfo.Taf = null;
         }
 
+        //GET Pirep Information
+        try
+        {
+            WxSvc.WxInfo.ICAO = icao;
+            var response = await client.GetStringAsync($"https://aviationweather.gov/api/data/pirep?id={icao}");
+
+            WxSvc.WxInfo.Pirep = new PirepInfo
+                {
+                    PirepData = new PirepData
+                    {
+                        Line_by_line = new List<string>()
+                    }
+                };                
+                
+            foreach (var line in response.Split("\n"))
+            {
+                if (line != String.Empty)
+                    WxSvc.WxInfo.Pirep.PirepData.Line_by_line.Add(line);
+            }
+        }
+        catch
+        {
+            WxSvc.WxInfo.Pirep = null;
+        }
+
         await InvokeAsync(StateHasChanged);
-        //Get TAF as well as Metar?
     }
-    }
+}

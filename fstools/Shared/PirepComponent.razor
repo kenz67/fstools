@@ -10,19 +10,9 @@
             {
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Issue Time:</b> @WeatherInfo.TafData.IssueTime
-                    </div>
-                </div>
-@*                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Valid Time:</b> @WeatherInfo.TafData.ValidTimeTo
-                    </div>
-                </div>*@
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Raw TAF:</b>
+                        <b>Pilot Reports for Area:</b>
                         <ul>
-                            @foreach (var c in WeatherInfo.TafData.Line_by_line)
+                            @foreach (var c in WeatherInfo.PirepData.Line_by_line)
                             {
                                 <li>@c</li>
                             }
@@ -32,7 +22,7 @@
             }
             else
             {
-                <label>TAF data not found</label>
+                <label>PIREP data not found</label>
             }
         </CollapseItem>
     </CollapseItems>
@@ -44,11 +34,11 @@
     public String ICAO { get; set; }
 
     [Parameter]
-    public TafInfo WeatherInfo { get; set; }
+    public PirepInfo WeatherInfo { get; set; }
 
 
     protected string Title()
     {
-        return $"TAF for {ICAO.ToUpper()}";
+        return $"PIREP for {ICAO.ToUpper()}";
     }
 }
