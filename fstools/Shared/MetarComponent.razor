@@ -10,60 +10,60 @@
             {
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Raw METAR:</b> @WeatherInfo.WeatherData.Raw
+                        <b>Raw METAR:</b> @WeatherInfo.WeatherData.RawOb
                     </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Report Time:</b> @WeatherInfo.WeatherData.Time_of_obs
+                        <b>Report Time:</b> @WeatherInfo.WeatherData.ReportTime
                     </div>
                 </div>
-                <div class="row g-3">
+@*                <div class="row g-3">
                     <div class="col-12">
                         <b>Flight Category:</b> @WeatherInfo.WeatherData.Category
                     </div>
-                </div>
+                </div>*@
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Temperature/Dewpoint:</b> @WeatherInfo.WeatherData.Temp&deg;C / @WeatherInfo.WeatherData.Dewpoint&deg;C
+                        <b>Temperature/Dewpoint:</b> @WeatherInfo.WeatherData.Temp&deg;C / @WeatherInfo.WeatherData.Dewp&deg;C
                     </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        @if (WeatherInfo.WeatherData.Wind.Equals("0"))
+                        @if (WeatherInfo.WeatherData.Wdir.Equals("0"))
                         {
                             <label><b>Wind:</b> Calm</label>
                         }
                         else
                         {
-                            <label><b>Wind:</b> @WeatherInfo.WeatherData.Wind degrees at @WeatherInfo.WeatherData.Wind_vel knots</label>
+                            <label><b>Wind:</b> @WeatherInfo.WeatherData.Wdir degrees at @WeatherInfo.WeatherData.Wspd knots</label>
                         }
                     
                     </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Visibility:</b> @WeatherInfo.WeatherData.Visibility statute miles
+                        <b>Visibility:</b> @WeatherInfo.WeatherData.Visib statute miles
                     </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <b>Altimeter:</b> @WeatherInfo.WeatherData.Alt_hg Hg / @WeatherInfo.WeatherData.Alt_mb mb
+                        <b>Altimeter:</b> @Math.Round(WeatherInfo.WeatherData.Altim * .02953, 2) Hg / @WeatherInfo.WeatherData.Altim mb
                     </div>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
                         <b>Sky Conditions:</b>
                         <ul>
-                            @foreach (var c in WeatherInfo.WeatherData.Sky_conditions)
+                            @foreach (var c in WeatherInfo.WeatherData.Clouds)
                             {
-                                @if (c.Coverage.Equals("CLR"))
+                                @if (c.Cover.Equals("CLR"))
                                 {
                                     <li>Clear</li>
                                 }
                                 else
                                 {
-                                     <li>@c.Coverage at @c.Base_agl' AGL</li>
+                                     <li>@c.Cover at @c.Base' AGL</li>
                                 }
                             }
                         </ul>

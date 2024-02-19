@@ -23,7 +23,7 @@
             <div class="row g-3">
                 @if (icaoService.IcaoList != null)
                 {
-                    <div class="col-2">
+                    <div class="col-3">
                         <AutoComplete 
                             @bind-Value="@ChartSvc.CurrentIcao" 
                             Items="icaoService.IcaoList" 

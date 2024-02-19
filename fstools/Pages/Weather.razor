@@ -19,7 +19,7 @@
             <div class="row g-3">
                 @if (icaoService.IcaoList != null)
                 {
-                    <div class="col-2">
+                    <div class="col-3">
                         <AutoComplete @bind-Value="@WxSvc.ICAO"
                                       Items="icaoService.IcaoList"
                                       IsLikeMatch="true"
@@ -117,13 +117,19 @@
         try
         {
             WxSvc.WxInfo.ICAO = icao;
-            var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/weather/metar?apt={icao}");
+            var response = await client.GetStringAsync($"https://aviationweather.gov/api/data/metar?ids={icao}&format=json");
+
+            response = response[1..^1];
+            response = $"{{ \"WeatherData\": {response}  }}";
             response = response
-                .Replace($"\"{icao}\":", "\"WeatherData\":")
-                .Replace($"\"K{icao}\":", "\"WeatherData\":")
-                ;
+                .Replace($"\"base\":", "\"Base\":")
+
+                //    .Replace($"\"{icao}\":", "\"WeatherData\":")
+                //    .Replace($"\"K{icao}\":", "\"WeatherData\":")
+                ;          
 
             WxSvc.WxInfo.Metar = JsonConvert.DeserializeObject<MetarInfo>(response);
+
         }
         //catch (HttpRequestException wex)
         //{            
@@ -137,13 +143,24 @@
         try
         {
             WxSvc.WxInfo.ICAO = icao;
-            var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/weather/taf?apt={icao}");
-            response = response
-                .Replace($"\"{icao}\":", "\"TafData\":")
-                .Replace($"\"K{icao}\":", "\"TafData\":")
-                ;
+            var responseJson = await client.GetStringAsync($"https://aviationweather.gov/api/data/taf?ids={icao}&format=json");
+            responseJson = responseJson[1..^1];
+            responseJson = $"{{ \"TafData\": {responseJson}  }}";
 
-            WxSvc.WxInfo.Taf = JsonConvert.DeserializeObject<TafInfo>(response);    
+            var response = await client.GetStringAsync($"https://aviationweather.gov/api/data/taf?ids={icao}");
+            //response = response
+            //    .Replace($"\"{icao}\":", "\"TafData\":")
+            //    .Replace($"\"K{icao}\":", "\"TafData\":")
+            //    ;
+
+            WxSvc.WxInfo.Taf = JsonConvert.DeserializeObject<TafInfo>(responseJson);
+            WxSvc.WxInfo.Taf.TafData.Line_by_line = new List<string>();
+            foreach (var line in response.Split("\n"))
+            {
+                if (line != String.Empty)
+                    WxSvc.WxInfo.Taf.TafData.Line_by_line.Add(line);
+            }
+            WxSvc.WxInfo.Taf.TafData.Line_by_line.RemoveAt(0);
         }
         //catch (HttpRequestException wex)
         //{
