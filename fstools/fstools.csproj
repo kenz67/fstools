@@ -8,11 +8,11 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="7.11.0" />
-    <PackageReference Include="BootstrapBlazor.FontAwesome" Version="7.5.0" />
-    <PackageReference Include="BootstrapBlazor.PdfReader" Version="7.2.0" />
-    <PackageReference Include="BootstrapBlazor.SummerNote" Version="7.3.4" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.54" />
+    <PackageReference Include="BootstrapBlazor" Version="8.2.3" />
+    <PackageReference Include="BootstrapBlazor.FontAwesome" Version="8.0.1" />
+    <PackageReference Include="BootstrapBlazor.PdfReader" Version="8.0.3" />
+    <PackageReference Include="BootstrapBlazor.SummerNote" Version="8.0.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.59" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
