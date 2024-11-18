@@ -24,11 +24,18 @@ stages:
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
+    - task: CopyFiles@2
+      displayName: Copy Files to Stagin
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)/bin/Release/net8.0'
+        contents: '**/*'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - stage: Deploy
   jobs:
   - job: DeployByFTP
     steps:
+    - checkout: none
     - task: FtpUpload@2
       inputs:
         credentialsOption: 'inputs'
