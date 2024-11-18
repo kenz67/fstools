@@ -7,7 +7,6 @@
 
 trigger:
 - master
-- Pipelines
 
 pool:
   name: Default  
