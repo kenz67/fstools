@@ -60,7 +60,7 @@ stages:
         username: $(ftpUser)
         password: $(ftpPassword)
         rootDirectory: '$(build.artifactStagingDirectory)/website'
-        filePatterns: 'nofiles'
+        filePatterns: 'appsettings.json'
         remoteDirectory: /fstools.zaldo.com-new/
         clean: false
         cleanContents: false
@@ -69,5 +69,5 @@ stages:
         customCmds: |
           ren fstools.zaldo.com fstools.zaldo.com-tmp
           ren fstools.zaldo.com-new fstools.zaldo.com
-          ren fstools.zaldo.com-tmp fstools.zaldo.com-new
+          ren fstools.zaldo.com-tmp fstools.zaldo.com-new1
         
