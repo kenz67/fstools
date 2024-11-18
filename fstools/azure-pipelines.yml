@@ -47,8 +47,27 @@ stages:
         password: $(ftpPassword)
         rootDirectory: '$(build.artifactStagingDirectory)/website'
         filePatterns: '**'
-        remoteDirectory: /fstools.zaldo.com/
+        remoteDirectory: /fstools.zaldo.com-new/
+        clean: false
+        cleanContents: true
+        preservePaths: true
+        trustSSL: false
+    - task: FtpUpload@2
+      displayName: Rename Folder
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp://ftp.zaldo.com'
+        username: $(ftpUser)
+        password: $(ftpPassword)
+        rootDirectory: '$(build.artifactStagingDirectory)/website'
+        filePatterns: 'nofiles'
+        remoteDirectory: /fstools.zaldo.com-new/
         clean: false
         cleanContents: false
         preservePaths: true
         trustSSL: false
+        customCmds: |
+          ren fstools.zaldo.com fstools.zaldo.com-tmp
+          ren fstools.zaldo.com-new fstools.zaldo.com
+          ren fstools.zaldo.com-tmp fstools.zaldo.com-new
+        
