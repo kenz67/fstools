@@ -25,11 +25,11 @@ stages:
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
     - task: CopyFiles@2
-      displayName: Copy Files to Stagin
+      displayName: Copy Files to Staging
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)/fstools/bin/Release/net8.0'
         contents: '**/*'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
+        targetFolder: '$(Build.ArtifactStagingDirectory)/website'
 
 - stage: Deploy
   jobs:
