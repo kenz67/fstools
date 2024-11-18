@@ -13,8 +13,8 @@ pool:
   name: Default  
 
 variables:
-  # solution: '**/*.sln'
-  # buildPlatform: 'Any CPU'
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 stages:
@@ -22,36 +22,44 @@ stages:
   jobs:
   - job: Build
     steps:
-    - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Artifact
+    - task: VSBuild@1
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
-        artifactName: fstoolsWebApp
+      solution: '$(solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+    # - script: dotnet build --configuration $(buildConfiguration)
+    #   displayName: 'dotnet build $(buildConfiguration)'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: Publish Artifact
+    #   inputs:
+    #     targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
+    #     artifactName: fstoolsWebApp
 
-- stage: Deploy
-  jobs:
-  - job: DeployByFTP
-    steps:
-    - checkout: none
-    - task: DownloadPipelineArtifact@2
-      inputs:
-         artifact: fstoolsWebApp
-         path: $(build.artifactStagingDirectory)/website
-    - task: FtpUpload@2
-      inputs:
-        credentialsOption: 'inputs'
-        serverUrl: 'ftp://ftp.zaldo.com'
-        username: $(ftpUser)
-        password: $(ftpPassword)
-        rootDirectory: '$(build.artifactStagingDirectory)/website'
-        filePatterns: '**'
-        remoteDirectory: fstools.zaldo.com1
-        clean: false
-        cleanContents: false
-        preservePaths: true
-        trustSSL: false
+# - stage: Deploy
+#   jobs:
+#   - job: DeployByFTP
+#     steps:
+#     - checkout: none
+#     - task: DownloadPipelineArtifact@2
+#       inputs:
+#          artifact: fstoolsWebApp
+#          path: $(build.artifactStagingDirectory)/website
+#     - task: FtpUpload@2
+#       inputs:
+#         credentialsOption: 'inputs'
+#         serverUrl: 'ftp://ftp.zaldo.com'
+#         username: $(ftpUser)
+#         password: $(ftpPassword)
+#         rootDirectory: '$(build.artifactStagingDirectory)/website'
+#         filePatterns: '**'
+#         remoteDirectory: fstools.zaldo.com1
+#         clean: false
+#         cleanContents: false
+#         preservePaths: true
+#         trustSSL: false
+
+
 # - task: NuGetToolInstaller@1
 
 # - task: NuGetCommand@2
