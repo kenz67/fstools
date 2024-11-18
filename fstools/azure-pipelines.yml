@@ -27,7 +27,7 @@ stages:
     - task: CopyFiles@2
       displayName: Copy Files to Stagin
       inputs:
-        sourceFolder: '$(Build.SourcesDirectory)/bin/Release/net8.0'
+        sourceFolder: '$(Build.SourcesDirectory)/fstools/bin/Release/net8.0'
         contents: '**/*'
         targetFolder: '$(Build.ArtifactStagingDirectory)'
 
