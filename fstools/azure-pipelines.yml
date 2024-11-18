@@ -18,29 +18,14 @@ variables:
   buildConfiguration: 'Release'
 
 stages:
-- stage: Build
-  jobs:
-  - job: Build
-    steps:
-    - task: NuGetToolInstaller@1
-  
-    - task: NuGetCommand@2
-      inputs:
-         restoreSolution: '$(solution)'
-
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    # - script: dotnet build --configuration $(buildConfiguration)
-    #   displayName: 'dotnet build $(buildConfiguration)'
-    # - task: PublishPipelineArtifact@1
-    #   displayName: Publish Artifact
-    #   inputs:
-    #     targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
-    #     artifactName: fstoolsWebApp
+     #- script: dotnet build --configuration $(buildConfiguration)
+     - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
+       displayName: 'dotnet build $(buildConfiguration)'
+     - task: PublishPipelineArtifact@1
+       displayName: Publish Artifact
+       inputs:
+         targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
+         artifactName: fstoolsWebApp
 
 # - stage: Deploy
 #   jobs:
