@@ -27,7 +27,7 @@ stages:
 
 - stage: Deploy
   jobs:
-  - job DeployByFTP
+  - job: DeployByFTP
 -   steps:
     - task: FtpUpload@2
       inputs:
