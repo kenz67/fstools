@@ -27,7 +27,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Artifact
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/bin/Release/net8.0'        
+        targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
         artifactName: fstoolsWebApp
 
 - stage: Deploy
