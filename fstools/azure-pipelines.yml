@@ -31,7 +31,7 @@ stages:
          targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0/publish'        
          artifactName: fstoolsWebApp
 
- - stage: Deploy
+- stage: Deploy
   jobs:
   - job: DeployByFTP
     steps:
