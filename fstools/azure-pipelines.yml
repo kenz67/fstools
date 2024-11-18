@@ -18,7 +18,11 @@ variables:
   buildConfiguration: 'Release'
 
 stages:
-     #- script: dotnet build --configuration $(buildConfiguration)
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+     - script: dotnet build --configuration $(buildConfiguration)
      - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
        displayName: 'dotnet build $(buildConfiguration)'
      - task: PublishPipelineArtifact@1
