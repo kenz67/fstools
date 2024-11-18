@@ -10,7 +10,7 @@ trigger:
 - Pipelines
 
 pool:
-  vmImage: 'windows-latest'
+  name: Default  
 
 variables:
   # solution: '**/*.sln'
@@ -25,8 +25,8 @@ stages:
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
 
-# - stage: Deploy
-#   jobs:
+- stage: Deploy
+  jobs:
   - job: DeployByFTP
     steps:
     - task: FtpUpload@2
