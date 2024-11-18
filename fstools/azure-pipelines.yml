@@ -32,7 +32,7 @@ stages:
     - task: FtpUpload@2
       inputs:
         credentialsOption: 'inputs'
-        serverUrl: 'ftp.zaldo.com'
+        serverUrl: 'ftp://ftp.zaldo.com'
         username: $(ftpUser)
         password: $(ftpPassword)
         rootDirectory: '$(build.artifactStagingDirectory)/website'
