@@ -28,31 +28,31 @@ stages:
      - task: PublishPipelineArtifact@1
        displayName: Publish Artifact
        inputs:
-         targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0'        
+         targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0/publish'        
          artifactName: fstoolsWebApp
 
-# - stage: Deploy
-#   jobs:
-#   - job: DeployByFTP
-#     steps:
-#     - checkout: none
-#     - task: DownloadPipelineArtifact@2
-#       inputs:
-#          artifact: fstoolsWebApp
-#          path: $(build.artifactStagingDirectory)/website
-#     - task: FtpUpload@2
-#       inputs:
-#         credentialsOption: 'inputs'
-#         serverUrl: 'ftp://ftp.zaldo.com'
-#         username: $(ftpUser)
-#         password: $(ftpPassword)
-#         rootDirectory: '$(build.artifactStagingDirectory)/website'
-#         filePatterns: '**'
-#         remoteDirectory: fstools.zaldo.com1
-#         clean: false
-#         cleanContents: false
-#         preservePaths: true
-#         trustSSL: false
+ # - stage: Deploy
+ #  jobs:
+ #  - job: DeployByFTP
+ #    steps:
+ #    - checkout: none
+ #    - task: DownloadPipelineArtifact@2
+ #      inputs:
+ #         artifact: fstoolsWebApp
+ #         path: $(build.artifactStagingDirectory)/website
+ #    - task: FtpUpload@2
+ #      inputs:
+ #        credentialsOption: 'inputs'
+ #        serverUrl: 'ftp://ftp.zaldo.com'
+ #        username: $(ftpUser)
+ #        password: $(ftpPassword)
+ #        rootDirectory: '$(build.artifactStagingDirectory)/website'
+ #        filePatterns: '**'
+ #        remoteDirectory: fstools.zaldo.com1
+ #        clean: false
+ #        cleanContents: false
+ #        preservePaths: true
+ #        trustSSL: false
 
 
 # - task: NuGetToolInstaller@1
