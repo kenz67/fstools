@@ -39,6 +39,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
          artifact: fstoolsWebApp
+         path: $(build.artifactStagingDirectory)/website
     - task: FtpUpload@2
       inputs:
         credentialsOption: 'inputs'
