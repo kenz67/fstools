@@ -28,7 +28,7 @@ stages:
       displayName: Publish Artifact
       inputs:
         targetPath: '$(Build.SourcesDirectory)/fstools/bin/Release/net8.0'        
-        contents: '**/*'
+        contents: '**'
         artifactName: fstoolsWebApp
 
 - stage: Deploy
@@ -48,7 +48,7 @@ stages:
         password: $(ftpPassword)
         rootDirectory: '$(build.artifactStagingDirectory)/website'
         filePatterns: '**'
-        remoteDirectory: fstools.zaldo.com
+        remoteDirectory: fstools.zaldo.com1
         clean: false
         cleanContents: false
         preservePaths: true
