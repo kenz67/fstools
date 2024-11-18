@@ -47,27 +47,8 @@ stages:
         password: $(ftpPassword)
         rootDirectory: '$(build.artifactStagingDirectory)/website'
         filePatterns: '**'
-        remoteDirectory: /fstools.zaldo.com1/
+        remoteDirectory: /fstools.zaldo.com/
         clean: false
         cleanContents: false
         preservePaths: true
         trustSSL: false
-
-
-# - task: NuGetToolInstaller@1
-
-# - task: NuGetCommand@2
-#   inputs:
-#     restoreSolution: '$(solution)'
-
-# - task: VSBuild@1
-#   inputs:
-#     solution: '$(solution)'
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
- 
-# - task: VSTest@2
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
