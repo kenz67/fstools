@@ -25,8 +25,23 @@ stages:
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'dotnet build $(buildConfiguration)'
 
-#- stage: Deploy
-
+- stage: Deploy
+  jobs:
+  - job DeployByFTP
+-   steps:
+    - task: FtpUpload@2
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp.zaldo.com'
+        username: $(ftpUser)
+        password: $(ftpPassword)
+        rootDirectory: '$(build.artifactStagingDirectory)/website'
+        filePatterns: '**'
+        remoteDirectory: fstools.zaldo.com
+        clean: false
+        cleanContents: false
+        preservePaths: true
+        trustSSL: false
 # - task: NuGetToolInstaller@1
 
 # - task: NuGetCommand@2
