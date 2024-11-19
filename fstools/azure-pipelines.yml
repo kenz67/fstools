@@ -33,13 +33,13 @@ stages:
      #     targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0/publish'        
      #     artifactName: fstoolsWebApp
 
-# - stage: Deploy
-#   jobs:
-#   - job: DeployByFTP
-#     steps:
-#     - checkout: none
+- stage: Deploy
+  jobs:
+  - job: DeployByFTP
+    steps:
+    - checkout: none
       
-#     - script:  dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)
+    - script:  dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)
       
     # - task: DownloadPipelineArtifact@2
     #     inputs:
