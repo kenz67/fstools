@@ -4,15 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=net%2Cbrowser
 
-trigger:
+pr:
 - master
 
 pool:
   name: Default  
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 #Don't need to Build and Publish (publish should do both, but keeping this here for now as may add test steps, etc)
