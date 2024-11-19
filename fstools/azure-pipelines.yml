@@ -30,6 +30,7 @@ stages:
 
 - stage: Publish
   jobs:
-  - checkout: none
-    steps:
-    - script: dotnet build --configuration $(buildConfiguration)
+  - job: Publish
+    - checkout: none
+      steps:
+      - script: dotnet build --configuration $(buildConfiguration)
