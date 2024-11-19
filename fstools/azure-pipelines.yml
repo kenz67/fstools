@@ -31,8 +31,8 @@ stages:
 - stage: Publish
   jobs:
   - job: Publish
-  steps:
-  - checkout: none
+    steps:
+    - checkout: none
 
-  - script: echo Hello, world!
-    displayName: 'Run a one-line script'  
+    - script: echo Hello, world!
+      displayName: 'Run a one-line script'  
