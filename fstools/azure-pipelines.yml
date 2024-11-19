@@ -24,25 +24,27 @@ stages:
   jobs:
   - job: Build
     steps:
-     - script: dotnet build --configuration $(buildConfiguration)
-     - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
-       displayName: 'dotnet build $(buildConfiguration)'
-     - task: PublishPipelineArtifact@1
-       displayName: Publish Artifact
-       inputs:
-         targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0/publish'        
-         artifactName: fstoolsWebApp
+    - script: dotnet build --configuration $(buildConfiguration)
+    - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
+      displayName: 'dotnet build $(buildConfiguration)'
+     # - task: PublishPipelineArtifact@1
+     #   displayName: Publish Artifact
+     #   inputs:
+     #     targetPath: '$(System.DefaultWorkingDirectory)/fstools/bin/Release/net8.0/publish'        
+     #     artifactName: fstoolsWebApp
 
-- stage: Deploy
-  jobs:
-  - job: DeployByFTP
-    steps:
-    - checkout: none
-     - script:  dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)
-     - task: DownloadPipelineArtifact@2
-       inputs:
-         artifact: fstoolsWebApp
-         path: $(build.artifactStagingDirectory)/website
+# - stage: Deploy
+#   jobs:
+#   - job: DeployByFTP
+#     steps:
+#     - checkout: none
+      
+#     - script:  dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)
+      
+    # - task: DownloadPipelineArtifact@2
+    #     inputs:
+    #      artifact: fstoolsWebApp
+    #      path: $(build.artifactStagingDirectory)/website
     
     # - task: FtpUpload@2
     #   inputs:
