@@ -2,14 +2,10 @@
 # Build and test ASP.NET Core projects targeting the full .NET Framework.
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
-#https://learn.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=net%2Cbrowser
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=net%2Cbrowser
 
 trigger:
 - master
-
-
-#    msdeploy -verb:sync -source:package='path/to/your/published.zip' -dest:auto,computer='server-address',site='website-name' 
 
 pool:
   name: Default  
@@ -19,18 +15,18 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
+#Don't need to Build and Publish (publish should do both, but keeping this here for now as may add test steps, etc)
 stages:
 - stage: Build
   jobs:
   - job: Build
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
-    # - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
-    #   displayName: 'dotnet build $(buildConfiguration)'
 
 - stage: Publish
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   jobs:
-  - job: Publish
+  - job: Publish    
     steps:
     - checkout: none    
     - script: dotnet publish fstools/fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)      
