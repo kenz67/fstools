@@ -8,6 +8,9 @@
 trigger:
 - master
 
+
+#    msdeploy -verb:sync -source:package='path/to/your/published.zip' -dest:auto,computer='server-address',site='website-name' 
+
 pool:
   name: Default  
 
@@ -35,39 +38,41 @@ stages:
   - job: DeployByFTP
     steps:
     - checkout: none
-    - task: DownloadPipelineArtifact@2
-      inputs:
+     - script:  dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)
+     - task: DownloadPipelineArtifact@2
+       inputs:
          artifact: fstoolsWebApp
          path: $(build.artifactStagingDirectory)/website
-    - task: FtpUpload@2
-      inputs:
-        credentialsOption: 'inputs'
-        serverUrl: 'ftp://ftp.zaldo.com'
-        username: $(ftpUser)
-        password: $(ftpPassword)
-        rootDirectory: '$(build.artifactStagingDirectory)/website'
-        filePatterns: '**'
-        remoteDirectory: /fstools.zaldo.com-new/
-        clean: false
-        cleanContents: true
-        preservePaths: true
-        trustSSL: false
-    - task: FtpUpload@2
-      displayName: Rename Folder
-      inputs:
-        credentialsOption: 'inputs'
-        serverUrl: 'ftp://ftp.zaldo.com'
-        username: $(ftpUser)
-        password: $(ftpPassword)
-        rootDirectory: '$(build.artifactStagingDirectory)/website'
-        filePatterns: 'appsettings.json'
-        remoteDirectory: /fstools.zaldo.com-new/
-        clean: false
-        cleanContents: false
-        preservePaths: true
-        trustSSL: false
-        customCmds: |
-          ren fstools.zaldo.com fstools.zaldo.com-tmp
-          ren fstools.zaldo.com-new fstools.zaldo.com
-          ren fstools.zaldo.com-tmp fstools.zaldo.com-new1
+    
+    # - task: FtpUpload@2
+    #   inputs:
+    #     credentialsOption: 'inputs'
+    #     serverUrl: 'ftp://ftp.zaldo.com'
+    #     username: $(ftpUser)
+    #     password: $(ftpPassword)
+    #     rootDirectory: '$(build.artifactStagingDirectory)/website'
+    #     filePatterns: '**'
+    #     remoteDirectory: /fstools.zaldo.com-new/
+    #     clean: false
+    #     cleanContents: true
+    #     preservePaths: true
+    #     trustSSL: false
+    # - task: FtpUpload@2
+    #   displayName: Rename Folder
+    #   inputs:
+    #     credentialsOption: 'inputs'
+    #     serverUrl: 'ftp://ftp.zaldo.com'
+    #     username: $(ftpUser)
+    #     password: $(ftpPassword)
+    #     rootDirectory: '$(build.artifactStagingDirectory)/website'
+    #     filePatterns: 'appsettings.json'
+    #     remoteDirectory: /fstools.zaldo.com-new/
+    #     clean: false
+    #     cleanContents: false
+    #     preservePaths: true
+    #     trustSSL: false
+    #     customCmds: |
+    #       ren fstools.zaldo.com fstools.zaldo.com-tmp
+    #       ren fstools.zaldo.com-new fstools.zaldo.com
+    #       ren fstools.zaldo.com-tmp fstools.zaldo.com-new1
         
