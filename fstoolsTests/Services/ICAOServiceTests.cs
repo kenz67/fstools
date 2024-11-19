@@ -6,7 +6,7 @@ namespace fstoolsTests.Services
     public class IcaoServiceTests
     {
         [TestMethod()]
-        public void ChartSvcValues()
+        public void IcaotSvcValues()
         {
             var svc = new IcaoService();
             Assert.IsNull(svc.IcaoList);
