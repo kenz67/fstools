@@ -34,5 +34,5 @@ stages:
     steps:
     - checkout: none
 
-    - script: echo Hello, world!
-      displayName: 'Run a one-line script'  
+    - script: dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)      
+      displayName: 'Push to Server  
