@@ -31,6 +31,8 @@ stages:
 - stage: Publish
   jobs:
   - job: Publish
-    - checkout: none
-      steps:
-      - script: dotnet build --configuration $(buildConfiguration)
+  steps:
+  - checkout: none
+
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'  
