@@ -25,5 +25,11 @@ stages:
   - job: Build
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
-    - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
-      displayName: 'dotnet build $(buildConfiguration)'
+    # - script: dotnet publish -p:PublishProfile=fstools/Properties/PublishProfiles/FTPProfile.pubxml  
+    #   displayName: 'dotnet build $(buildConfiguration)'
+
+- stage: Publish
+  jobs:
+  - checkout: none
+    steps:
+    - script: dotnet build --configuration $(buildConfiguration)
