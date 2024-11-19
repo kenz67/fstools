@@ -32,7 +32,7 @@ stages:
   jobs:
   - job: Publish
     steps:
-    - checkout: none
+    # - checkout: none
 
     - script: dotnet publish fstools.csproj /p:PublishProfile="Properties/PublishProfiles/fstools.zaldo.com - Web Deploy.pubxml" /p:Password=$(ftpPassword) /p:UserName=$(ftpUser)      
       displayName: 'Push to Server'
