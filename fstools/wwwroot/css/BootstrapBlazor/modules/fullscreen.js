@@ -46,7 +46,7 @@ export class FullScreen extends SimpleComponent {
     }
 
     _isFullscreen() {
-        return document.fullscreen ||
+        return document.fullscreenElement !== null ||
             document.webkitIsFullScreen ||
             document.webkitFullScreen ||
             document.mozFullScreen ||
