@@ -28,7 +28,6 @@ namespace fstoolsTests.Services
             Assert.AreEqual(1, svc.Info.Count);
             Assert.AreEqual(1, svc.Timers.Count);
             Assert.AreEqual(10, svc.TimerCnt);
-
         }
     }
 }
