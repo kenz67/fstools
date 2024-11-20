@@ -7,38 +7,39 @@ public class SkyVectorScrape
 {
     private readonly ChartList charts = new();
 
-    public async Task<ChartList> TestScrape(string ICAO)
+    public async Task<ChartList> Scrape(string ICAO)
     {
-        charts.ICAO = new List<Chart>();
+        charts.ICAO = [];
 
         var web = new HtmlWeb();
         var doc = await web.LoadFromWebAsync($"https://skyvector.com/api/airportSearch?query={ICAO}");
         var aptData = doc.DocumentNode.SelectNodes("//div[@class='aptdata']");
-        var l = new List<string>();
-        foreach (var apt in aptData)
-        {
-            if (apt.InnerHtml.Contains("Airport Diagram"))
-            {
-                ProcessAirportDiagram(apt);
-            }
-            else if (apt.InnerHtml.Contains("Approach Procedure (IAP) Charts"))
-            {
-                ProcessApproach("Approaches", apt);
-            }
-            else if (apt.InnerHtml.Contains("Terminal Arrival (STAR) Charts"))
-            {
-                ProcessApproach("Arrivals (STAR)", apt);
-            }
-            else if (apt.InnerHtml.Contains("Procedure (DP) Charts"))
-            {
-                ProcessApproach("Departures (SID)", apt);
-            }
-            else if (apt.InnerHtml.Contains("Weather Minimums"))
-            {
-                ProcessApproach("Minimums", apt);
-            }
 
-            l.Add(apt.InnerText);
+        if (aptData != null)
+        {
+            foreach (var apt in aptData)
+            {
+                if (apt.InnerHtml.Contains("Airport Diagram"))
+                {
+                    ProcessAirportDiagram(apt);
+                }
+                else if (apt.InnerHtml.Contains("Approach Procedure (IAP) Charts"))
+                {
+                    ProcessApproach("Approaches", apt);
+                }
+                else if (apt.InnerHtml.Contains("Terminal Arrival (STAR) Charts"))
+                {
+                    ProcessApproach("Arrivals (STAR)", apt);
+                }
+                else if (apt.InnerHtml.Contains("Procedure (DP) Charts"))
+                {
+                    ProcessApproach("Departures (SID)", apt);
+                }
+                else if (apt.InnerHtml.Contains("Weather Minimums"))
+                {
+                    ProcessApproach("Minimums", apt);
+                }
+            }
         }
 
         return charts;
