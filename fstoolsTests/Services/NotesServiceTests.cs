@@ -1,8 +1,8 @@
 ﻿using fstools.Services;
+using Xunit;
 
 namespace fstoolsTests.Services
 {
-    [TestClass()]
     public class NotesServiceTests
     {
         private readonly string defaultNotes = """
@@ -22,15 +22,15 @@ namespace fstoolsTests.Services
         <ul><li><u><br></u></li></ul>
 """;
 
-        [TestMethod()]
+        [Fact]
         public void NotesServiceTest()
         {
             var svc = new NotesService();
 
-            Assert.AreEqual(defaultNotes, svc.Notes);
+            Assert.Equal(defaultNotes, svc.Notes);
         }
 
-        [TestMethod()]
+        [Fact]
         public void SetDefaultTest()
         {
             var svc = new NotesService
@@ -38,10 +38,10 @@ namespace fstoolsTests.Services
                 Notes = "Some Notes"
             };
 
-            Assert.AreEqual("Some Notes", svc.Notes);
+            Assert.Equal("Some Notes", svc.Notes);
             svc.Notes = defaultNotes;
 
-            Assert.AreEqual(defaultNotes, svc.Notes);
+            Assert.Equal(defaultNotes, svc.Notes);
         }
     }
 }

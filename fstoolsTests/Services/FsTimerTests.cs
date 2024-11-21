@@ -1,12 +1,12 @@
 ﻿using fstools.Services;
 using Moq;
+using Xunit;
 
 namespace fstoolsTests.Services
 {
-    [TestClass()]
     public class FsTimerTests
     {
-        [TestMethod()]
+        [Fact]
         public void StartTimerTest()
         {
             var svc = new FsTimer();
@@ -25,13 +25,13 @@ namespace fstoolsTests.Services
             var callbackCalled = callbackInvoked.Wait(500); // Wait up to 500ms
 
             // Assert
-            Assert.IsTrue(callbackCalled, "Callback was not invoked.");
+            Assert.True(callbackCalled, "Callback was not invoked.");
             mockCallback.Verify(c => c(It.Is<TimeSpan>(t => t > TimeSpan.Zero)), Times.AtLeastOnce(), "Callback was not invoked with valid elapsed time.");
 
             svc.StopTimer();
         }
 
-        [TestMethod()]
+        [Fact]
         public void PauseResumeTimerTest()
         {
             var svc = new FsTimer();
@@ -51,18 +51,18 @@ namespace fstoolsTests.Services
             Thread.Sleep(200);
             var time2 = svc.FormattedTime();
 
-            Assert.AreEqual(time1, time2);
+            Assert.Equal(time1, time2);
 
             svc.ResumeTimer();
             Thread.Sleep(200);
             var time3 = svc.FormattedTime();
 
-            Assert.AreNotEqual(time2, time3);
+            Assert.NotEqual(time2, time3);
 
             svc.StopTimer();
         }
 
-        [TestMethod()]
+        [Fact]
         public void StopTimerTest()
         {
             var svc = new FsTimer();
@@ -79,18 +79,18 @@ namespace fstoolsTests.Services
 
             svc.StopTimer();
 
-            Assert.AreEqual("00:00:00.0", svc.FormattedTime());
+            Assert.Equal("00:00:00.0", svc.FormattedTime());
         }
 
-        [TestMethod()]
+        [Fact]
         public void StopTimerTest2()
         {
             var svc = new FsTimer();
             svc.StopTimer();
-            Assert.AreEqual("00:00:00.0", svc.FormattedTime());
+            Assert.Equal("00:00:00.0", svc.FormattedTime());
         }
 
-        [TestMethod()]
+        [Fact]
         public void SetCallbackTest()
         {
             var svc = new FsTimer();
@@ -110,7 +110,7 @@ namespace fstoolsTests.Services
             var callbackCalled = callbackInvoked.Wait(500); // Wait up to 500ms
 
             // Assert
-            Assert.IsTrue(callbackCalled, "Callback was not invoked.");
+            Assert.True(callbackCalled, "Callback was not invoked.");
             mockCallback.Verify(c => c(It.Is<TimeSpan>(t => t > TimeSpan.Zero)), Times.AtLeastOnce(), "Callback was not invoked with valid elapsed time.");
 
             svc.StopTimer();

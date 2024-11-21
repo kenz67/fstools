@@ -1,24 +1,24 @@
 ﻿using fstools.Services;
+using Xunit;
 
 namespace fstoolsTests.Services
 {
-    [TestClass()]
     public class WeatherServiceTests
     {
-        [TestMethod()]
+        [Fact]
         public void TimerSvcValues()
         {
             var svc = new WeatherService();
-            Assert.IsNull(svc.ICAO);
-            Assert.IsNull(svc.WxInfo);
+            Assert.Null(svc.ICAO);
+            Assert.Null(svc.WxInfo);
 
             svc.ICAO = "KFFL";
-            Assert.AreEqual("KFFL", svc.ICAO);
-            Assert.IsNull(svc.WxInfo);
+            Assert.Equal("KFFL", svc.ICAO);
+            Assert.Null(svc.WxInfo);
 
             svc.WxInfo = new();
-            Assert.AreEqual("KFFL", svc.ICAO);
-            Assert.IsNotNull(svc.WxInfo);
+            Assert.Equal("KFFL", svc.ICAO);
+            Assert.NotNull(svc.WxInfo);
         }
     }
 }

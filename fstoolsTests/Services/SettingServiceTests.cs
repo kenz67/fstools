@@ -1,18 +1,18 @@
 ﻿using fstools.Services;
+using Xunit;
 
 namespace fstoolsTests.Services
 {
-    [TestClass()]
     public class SettingsServiceTests
     {
-        [TestMethod()]
+        [Fact]
         public void SettingSvcValues()
         {
             var svc = new SettingsService();
-            Assert.IsFalse(svc.ShowCl);
+            Assert.False(svc.ShowCl);
 
             svc.ShowCl = true;
-            Assert.IsTrue(svc.ShowCl);
+            Assert.True(svc.ShowCl);
         }
     }
 }
