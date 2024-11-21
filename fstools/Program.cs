@@ -1,4 +1,5 @@
 using fstools.Services;
+using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,9 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program;
 
 //
 //TODO: Checklist page?

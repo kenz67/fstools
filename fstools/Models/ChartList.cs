@@ -1,6 +1,9 @@
-﻿namespace fstools.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace fstools.Models;
 
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+[ExcludeFromCodeCoverage]
 public class Chart
 {
     public string State { get; set; }
@@ -18,6 +21,7 @@ public class Chart
     public string Pdf_path { get; set; }
 }
 
+[ExcludeFromCodeCoverage]
 public class ChartList
 {
     public List<Chart> ICAO { get; set; }

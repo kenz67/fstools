@@ -1,10 +1,14 @@
-﻿namespace fstools.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace fstools.Models;
+
+[ExcludeFromCodeCoverage]
 public class TafInfo
 {
     public TafData TafData { get; set; }
 }
 
+[ExcludeFromCodeCoverage]
 public class TafData
 {
     public string IcaoId { get; set; }

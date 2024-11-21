@@ -1,5 +1,8 @@
-﻿namespace fstools.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace fstools.Models;
+
+[ExcludeFromCodeCoverage]
 public class WeatherInfo
 {
     public string ICAO { get; set; }
