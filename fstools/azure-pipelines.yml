@@ -18,9 +18,12 @@ stages:
 - stage: Build
   jobs:
   - job: "Build_Test"
+    displayName: "Build & Test"
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
+      displayName: "Build"
     - task: DotNetCoreCLI@2
+      displayName: "Test"
       inputs:
          command: test
          projects: '**/*Tests/*.csproj'
