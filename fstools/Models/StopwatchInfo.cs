@@ -1,5 +1,8 @@
-﻿namespace fstools.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace fstools.Models;
+
+[ExcludeFromCodeCoverage]
 public class StopwatchInfo
 {
     public String ElaspedTime { get; set; } = "00:00:00.0";

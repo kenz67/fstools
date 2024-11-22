@@ -2,34 +2,27 @@
 
 namespace fstools.Services;
 
-public class BrowserService
+public class BrowserService(IJSRuntime jsRuntime)
 {
     public string BrowserName { get; set; }
     public string BrowserVersion { get; set; }
     public string BrowserMajorVersion { get; set; }
-    public string AppName { get; set; }
-    public string UserAgent { get; set; }
+
     public string Full { get; set; }
 
-    private readonly IJSRuntime _jsRuntime;
-
-    public BrowserService(IJSRuntime jsRuntime)
-    {
-        _jsRuntime = jsRuntime;
-    }
+    private readonly IJSRuntime _jsRuntime = jsRuntime;
 
     public async Task GetData()
     {
         if (string.IsNullOrEmpty(BrowserName))
         {
             var browserData = await _jsRuntime.InvokeAsync<string>("browserVersion");
-            var parts = browserData.Split(new char[] { ',' });
+            var parts = browserData.Split([',']);
 
             Full = browserData.Trim();
             if (parts.Length > 0) { BrowserName = parts[0]; }
             if (parts.Length > 1) { BrowserVersion = parts[1]; }
             if (parts.Length > 2) { BrowserMajorVersion = parts[2]; }
-            if (parts.Length > 3) { UserAgent = parts[3]; }
         }
     }
 

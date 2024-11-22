@@ -1,5 +1,8 @@
-﻿namespace fstools.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace fstools.Models;
+
+[ExcludeFromCodeCoverage]
 public class WeatherData
 {
     public string IcaoId { get; set; }
@@ -18,11 +21,13 @@ public class WeatherData
     public DateTime ReportTime { get; set; }
 }
 
+[ExcludeFromCodeCoverage]
 public class MetarInfo
 {
     public WeatherData WeatherData { get; set; }
 }
 
+[ExcludeFromCodeCoverage]
 public class SkyCondition
 {
     public string Cover { get; set; }
