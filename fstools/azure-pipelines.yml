@@ -17,7 +17,7 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: Build & Test
+  - job: "Build & Test"
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
     - task: DotNetCoreCLI@2
