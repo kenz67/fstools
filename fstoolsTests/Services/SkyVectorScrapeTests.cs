@@ -18,7 +18,7 @@ namespace fstoolsTests.Services
         {
             var svc = new SkyVectorScrape();
             var charts = await svc.Scrape("KZZZ");
-            Assert.Equal(0, charts.ICAO.Count);
+            Assert.Empty(charts.ICAO);
         }
     }
 }
