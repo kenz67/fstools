@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 using Moq;
 using Xunit;
 
-namespace fstoolsTests.Components;
+namespace fstoolsTests.Shared;
 
 public class ComponentTests : TestContext
 {

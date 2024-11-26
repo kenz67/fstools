@@ -1,23 +1,22 @@
 ﻿using fstools.Services;
 using Xunit;
 
-namespace fstoolsTests.Services
+namespace fstoolsTests.Services;
+
+public class IcaoServiceTests
 {
-    public class IcaoServiceTests
+    [Fact]
+    public void IcaotSvcValues()
     {
-        [Fact]
-        public void IcaotSvcValues()
-        {
-            var svc = new IcaoService();
-            Assert.Null(svc.IcaoList);
+        var svc = new IcaoService();
+        Assert.Null(svc.IcaoList);
 
-            svc.IcaoList = [];
-            Assert.Empty(svc.IcaoList);
+        svc.IcaoList = [];
+        Assert.Empty(svc.IcaoList);
 
-            svc.IcaoList.Add("KOXC");
-            svc.IcaoList.Add("N87");
+        svc.IcaoList.Add("KOXC");
+        svc.IcaoList.Add("N87");
 
-            Assert.Equal(2, svc.IcaoList.Count);
-        }
+        Assert.Equal(2, svc.IcaoList.Count);
     }
 }
