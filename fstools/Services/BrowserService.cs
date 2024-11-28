@@ -12,7 +12,7 @@ public class BrowserService(IJSRuntime jsRuntime)
 
     private readonly IJSRuntime _jsRuntime = jsRuntime;
 
-    public async Task GetData()
+    public virtual async Task GetData()
     {
         if (string.IsNullOrEmpty(BrowserName))
         {
