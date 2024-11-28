@@ -42,7 +42,9 @@
     private bool _iconMenuActive { get; set; }
     private string IconMenuCssClass => _iconMenuActive ? "width: 80px;" : null;
 
-    protected void ToggleIconMenu(bool iconMenuActive)
+    //Callback method from NavMenu to toggle weather side menu 
+    // has descriptions or just icons
+    public virtual void ToggleIconMenu(bool iconMenuActive)
     {
         _iconMenuActive = iconMenuActive;
     }

@@ -3,7 +3,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark ">
     <div class="container-fluid">
-        <span class="fa-solid fa-plane" @onclick="ToggleIconMenu"  style="color:white;" aria-hidden="true"></span>
+        <span class="fa-solid fa-plane" id="ToggleMenu" @onclick="ToggleIconMenu"  style="color:white;" aria-hidden="true"></span>
         @if (!@IconMenuActive)
         {
             <span class="navbar-brand" @onclick="ToggleIconMenu" style="color:white;" aria-hidden="true">FS Tools</span>

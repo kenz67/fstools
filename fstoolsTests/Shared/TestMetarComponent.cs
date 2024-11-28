@@ -8,7 +8,7 @@ using Xunit;
 
 namespace fstoolsTests.Shared;
 
-public class ComponentTests : TestContext
+public class MetarComponentTests : TestContext
 {
     [Fact]
     public void TestMetarComponent()
