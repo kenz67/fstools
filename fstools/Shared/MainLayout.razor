@@ -1,40 +1,38 @@
-﻿@using fstools.Models;
+﻿@using MudBlazor
+@using fstools.Models;
 @using fstools.Services;
 
 @inherits LayoutComponentBase
 @inject TimerService Timers
 @inject IJSRuntime jsRuntime;
 @inject BrowserService browser;
+
+
 <PageTitle>FS Tools</PageTitle>
 
+@* Use provider components as self-closing (some MudBlazor versions expect this) *@
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
 
-<div class="page">
-    <div class="sidebar" style="@IconMenuCssClass">4
-        <NavMenu ShowIconMenu="ToggleIconMenu" />
+<div class="app-layout">
+    <div class="page">
+        <div class="sidebar" style="@IconMenuCssClass">
+            <NavMenu ShowIconMenu="ToggleIconMenu" />
+        </div>
+
+        <main>
+            <div class="top-row px-4">
+                <div class="col-11">
+                    <StopwatchComponent timerText="Timer 1" timerNumber=1 timersIn="@Timers.Timers" infoIn="@Timers.Info" fontSize="20px" />
+                </div>
+            </div>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
     </div>
-
-    <main>
-        <div class="top-row px-4">
-            <div class="col-11">
-                <StopwatchComponent timerText="Timer 1" timerNumber=1 timersIn="@Timers.Timers" infoIn="@Timers.Info" fontSize="20px" />
-            </div>
- @*            <div class="col-1">
-                 <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-             </div>*@
-        </div>
-
-         @* Show Browser Info for test *@
-@*         <div class="row">
-            <div class="col-12">
-                <p>@browser.Full</p>
-                
-            </div>
-        </div>
- *@
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
 </div>
 
 @code
