@@ -31,7 +31,6 @@
     protected override void OnInitialized()
     {
         timerCount = Timers.TimerCnt;
-        //timerCount = c.GetTimerCount();
         if (timerCount.Equals(0))
         {
             timerCount = 1;
@@ -43,6 +42,7 @@
     public void AddTimer()
     {
         timerCount++;
+        Timers.Timers = c.timers;
     }
 
     void ResetTimers()

@@ -67,14 +67,16 @@
                     </div>
                 }
 
-                @if (charts != null && charts.ICAO.Count > 0)
+
+                @* TODO - would like to collapse based on type *@
+                @if (charts != null && !showChartFox)
                 {    
                     <div class="col-8">
                         <ListView aria-hidden="true" 
-                                TItem="Chart" 
-                                GroupName="@(p => p.Chart_code)"  
-                                Collapsable="true"
-                                IsAccordion="true" Items="@charts.ICAO">
+                                TItem="SingleChart"
+                                  GroupName="@(p => p.chart_type)"
+                                  Collapsable="true"
+                                  IsAccordion="true" Items="@charts">
                              <BodyTemplate>
                                  <Card>                                                                          
                                      <BodyTemplate>
@@ -82,7 +84,7 @@
                                             ButtonStyle="ButtonStyle.Round"
                                             Color="Color.Primary"
                                             OnClick="() => SelectedItem(context)">
-                                                @context.Chart_name
+                                            @context.chart_name
                                         </Button>                                        
                                     </BodyTemplate>
                                  </Card>                     
@@ -90,7 +92,7 @@
                         </ListView>
                     </div>
                 }
-                else if (showChartFox)
+                else
                 {
                     <div class="row g-3">
                         <div class="row-5">
@@ -126,7 +128,7 @@
     PdfReader PdfReader { get; set; }
 
     private HttpClient client = new HttpClient();
-    private ChartList charts;
+    private List<SingleChart> charts;
     private bool showChartFox = false;
 
     protected override async Task OnInitializedAsync()
@@ -172,24 +174,69 @@
             return;
         }
 
-        var response = await client.GetStringAsync($"https://api.aviationapi.com/v1/charts?apt={icao}");
-        response = response
-            .Replace($"\"{icao}\":", "\"ICAO\":")
-            .Replace($"\"K{icao}\":", "\"ICAO\":")
-            .Replace("\"APD\"", "\"Airport Diagram\"")
-            .Replace("\"DP\"", "\"Departures (SID)\"")
-            .Replace("\"HOT\"", "\"Hot Spots\"")
-            .Replace("\"IAP\"", "\"Approaches\"")
-            .Replace("\"MIN\"", "\"Minimums\"")
-            .Replace("\"STAR\"", "\"Arrivals (STAR)\"")
-            .Replace("\"DAU\"", "\"Depature AAUP\"")
-            .Replace("\"LAH\"", "\"Land and Hold Short\"")
-            ;
-        charts = JsonConvert.DeserializeObject<ChartList>(response);
-
-        if (charts.ICAO.Count.Equals(0))
+        showChartFox = true;
+        try
         {
-            showChartFox = true;           
+            var response = await client.GetStringAsync($"https://api-v2.aviationapi.com/v2/charts?airport={icao}");
+            response = response
+                .Replace($"\"{icao}\":", "\"ICAO\":")
+                .Replace($"\"K{icao}\":", "\"ICAO\":")
+                .Replace("\"APD\"", "\"Airport Diagram\"")
+                .Replace("\"DP\"", "\"Departures (SID)\"")
+                .Replace("\"HOT\"", "\"Hot Spots\"")
+                .Replace("\"IAP\"", "\"Approaches\"")
+                .Replace("\"MIN\"", "\"Minimums\"")
+                .Replace("\"STAR\"", "\"Arrivals (STAR)\"")
+                .Replace("\"DAU\"", "\"Departure AAUP\"")
+                .Replace("\"LAH\"", "\"Land and Hold Short\"")
+                ;
+            var chartRoot = JsonConvert.DeserializeObject<ChartRoot>(response);
+            var allCharts = chartRoot.charts;
+
+            charts = new List<SingleChart>();
+            foreach (var c in allCharts.airport_diagram)
+            {
+                showChartFox = false;
+                charts.Add(c);
+                c.chart_type = "Airport Diagram";
+            }
+            
+            foreach (var c in allCharts.general)
+            {
+                showChartFox = false;
+                charts.Add(c);
+                c.chart_type = "General";
+            }
+
+
+            foreach (var c in allCharts.departure)
+            {
+                showChartFox = false;
+                charts.Add(c);
+                c.chart_type = "Departure";
+            }
+
+
+            foreach (var c in allCharts.arrival)
+            {
+                showChartFox = false;
+                charts.Add(c);
+                c.chart_type = "Arrival";
+            }
+
+
+            foreach (var c in allCharts.approach)
+            {
+                showChartFox = false;
+                charts.Add(c);
+                c.chart_type = "Approach";
+            }
+
+        }
+        catch
+        {
+            charts = null;
+            showChartFox = true;
         }
 
         //skyvector integration, only US as well :(
@@ -198,9 +245,9 @@
         //ChartSvc.ShowPdf = false;
     }
 
-    private async Task SelectedItem(Chart chart)
+    private async Task SelectedItem(SingleChart chart)
     {
-        ChartSvc.Pdf = chart.Pdf_path;
+        ChartSvc.Pdf = chart.pdf_url;
 
         if (BrowserSvc.CanDisplayPdf())
         {
@@ -218,7 +265,7 @@
         }
         else
         {
-            await jsRuntime.InvokeVoidAsync("blazorOpen", chart.Pdf_path, chart.Chart_name.Replace(" ", String.Empty));
+            await jsRuntime.InvokeVoidAsync("blazorOpen", chart.pdf_url, chart.chart_name.Replace(" ", String.Empty));
         }
     }
 
