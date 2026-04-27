@@ -38,13 +38,13 @@ else
     /// Arbitrary passthrough parameter for compatibility with callers that used Pagemode.
     /// Not used by this simple viewer but kept to preserve API compatibility.
     /// </summary>
-    [Parameter] public string? Pagemode { get; set; }
+    [Parameter] public string PageMode { get; set; }
 
     /// <summary>
     /// Arbitrary passthrough parameter for compatibility with callers that used Navpanes.
     /// Not used by this simple viewer but kept to preserve API compatibility.
     /// </summary>
-    [Parameter] public bool Navpanes { get; set; } = false;
+    [Parameter] public bool NavPanes { get; set; } = false;
 
     protected override void OnParametersSet()
     {

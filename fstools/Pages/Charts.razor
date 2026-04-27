@@ -103,7 +103,7 @@
         <section id="chart" />
         @if (BrowserSvc.CanDisplayPdf() && ChartSvc.ShowPdf)
         {
-            <PdfReader @ref="PdfReader" FileName="@ChartSvc.Pdf" Pagemode="EnumPageMode.None" Navpanes="false" StreamMode="true" Height="1100px" />
+            <PdfReader @ref="PdfReader" FileName="@ChartSvc.Pdf" PageMode="EnumPageMode.None" NavPanes="false" StreamMode="true" Height="1100px" />
         }
     </div>
 </div>
