@@ -1,7 +1,8 @@
 ﻿@page "/timer"
 
-@using BootstrapBlazor.Components
-@using fstools.Services;
+@using MudBlazor
+@using fstools.Models
+@using fstools.Services
 
 @inject NavigationManager NavManager
 @inject TimerService Timers
@@ -9,15 +10,20 @@
 <PageTitle>Timers</PageTitle>
 
 <h1>Timers</h1>
-<button class="btn btn-sm btn-primary" @onclick="AddTimer">Add Timer</button>
-<button class="btn btn-sm btn-primary" @onclick="ResetTimers">Reset</button>
-<br /><br />
+
+<MudStack Spacing="1" Direction="Row" AlignItems="AlignItems.Center">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="AddTimer">Add Timer</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="ResetTimers">Reset</MudButton>
+</MudStack>
+
+<br />
+
 @for (int i = 1; i <= timerCount; i++)
 {
     var showButtons = i > 1;
     <StopwatchComponent timerText="@getText(@i)" timerNumber=@i timersIn="@Timers.Timers" infoIn="@Timers.Info"
-                    showButtons="@showButtons"/>
-    <Divider/>
+                        showButtons="@showButtons" />
+    <MudDivider />
 }
 
 @code
@@ -26,29 +32,35 @@
     public MainLayout MainLayout { get; set; }
 
     int timerCount;
-    StopwatchComponent c = new StopwatchComponent();
 
     protected override void OnInitialized()
     {
         timerCount = Timers.TimerCnt;
         if (timerCount.Equals(0))
         {
-            timerCount = 1;
+            Timers.Timers.Add(new FsTimer());
+            Timers.Info.Add(new StopwatchInfo());
+            Timers.TimerCnt = 1;
         }
+
+        timerCount = Math.Max(1, Timers.TimerCnt);
     }
 
     public string getText(int i) => $"Timer {i}";
 
     public void AddTimer()
     {
+        // add directly to the service so the state persists
+        Timers.Timers.Add(new FsTimer());
+        Timers.Info.Add(new StopwatchInfo());
         timerCount++;
-        Timers.Timers = c.timers;
+        Timers.TimerCnt = timerCount;
+        StateHasChanged();
     }
 
     void ResetTimers()
     {
-        c.ResetTimers();
-        timerCount=1;
+        timerCount = 1;
         NavManager.NavigateTo("/timer", true);
     }
 }

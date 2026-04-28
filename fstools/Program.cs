@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddBootstrapBlazor().AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddScoped<TimerService>()
+builder.Services.AddSingleton<TimerService>()
 	.AddScoped<ChartService>()
 	.AddScoped<NotesService>()
 	.AddSingleton<IcaoService>()
