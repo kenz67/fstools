@@ -18,18 +18,19 @@
             {
                 <div class="col-3">
                     <MudAutocomplete T="string"
-                             @bind-Value="WxSvc.ICAO"
-                                     SearchFunc="@SearchIcao"
-                                     OnBlur="OnAutoCompleteBlur"
-                                     MinCharacters="1"
-                                     MaxItems="7"
-                                     OpenIcon="@Icons.Material.Filled.ArrowDropDown"
-                                     Dense="true"
-                                     Variant="Variant.Outlined"
-                                     Clearable="false"
-                                     Placeholder="ICAO"
-                                     InputAttributes="@(new Dictionary<string, object> { { "aria-label", "ICAO" } })"
-                                     @onkeydown="OnAutoCompleteKeyDown" />
+                        @bind-Value="WxSvc.ICAO"
+                        CoerceValue="true"
+                        SearchFunc="@SearchIcao"
+                        OnBlur="OnAutoCompleteBlur"
+                        MinCharacters="1"
+                        MaxItems="7"
+                        OpenIcon="@Icons.Material.Filled.ArrowDropDown"
+                        Dense="true"
+                        Variant="Variant.Outlined"
+                        Clearable="false"
+                        Placeholder="ICAO"
+                        InputAttributes="@(new Dictionary<string, object> { { "aria-label", "ICAO" } })"
+                        @onkeydown="OnAutoCompleteKeyDown" />
                 </div>
             
                 <div class="col-2">
