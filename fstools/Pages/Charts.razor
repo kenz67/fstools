@@ -18,7 +18,7 @@
 <h1>Charts</h1>
 
 <MudExpansionPanels>
-    <MudExpansionPanel Text="Search" Expanded="@(!ChartSvc.ShowPdf)">
+    <MudExpansionPanel class="mud-expansion-panel-khaki-header" Text="Search" Expanded="@(!ChartSvc.ShowPdf)">
          <div class="row g-3">            
             @if (icaoService.IcaoList != null)
             {
@@ -65,7 +65,7 @@
                 <div class="col-8">
                     @foreach (var group in charts.GroupBy(c => c.chart_type))
                     {
-                        <MudExpansionPanels>
+                        <MudExpansionPanels class="mud-expansion-panel-lightblue-header">
                             <MudExpansionPanel Text="@group.Key" DisablePadding="true">
                                 <MudPaper Class="pa-2">
                                     @foreach (var chart in group)
