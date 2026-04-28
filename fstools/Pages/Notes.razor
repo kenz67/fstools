@@ -1,29 +1,28 @@
 ﻿@page "/notes"
-@using BootstrapBlazor.Components
-@using fstools.Services;
-@inject NotesService NotesData; 
+@using MudBlazor
+@using Tizzani.MudBlazor.HtmlEditor
+@using fstools.Services
+@inject NotesService NotesData
 
 <PageTitle>Notes</PageTitle>
 
-<h1>
-   Notes
-    <Button style="margin-left:200px"
-        ButtonStyle="ButtonStyle.Round"
-        Color="Color.Primary"
-        OnClick="SetDefault">
-        Default
-    </Button>
-    <Button
-            ButtonStyle="ButtonStyle.Round"
-            Color="Color.Primary"
-            OnClick="Clear">
-        Clear
-    </Button>
+<h1 style="display:flex; align-items:center; gap:1rem;">
+    <span>Notes</span>
+    <div style="margin-left: auto;">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="SetDefault">Default</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="Clear">Clear</MudButton>
+    </div>
 </h1>
-<Editor ShowSubmit="false" @bind-Value="@NotesData.Notes" IsEditor="true" Height="750" ToolbarItems="@ToolbarItems" />
+
+@* Replace BootstrapBlazor Editor with Tizzani.MudBlazor.HtmlEditor *@
+<MudHtmlEditor @ref="editor" HtmlChanged="OnEditorChanged" Height="750" ToolbarItems="@ToolbarItems" />
 
 @code
 {
+    private MudHtmlEditor editor;
+    private readonly int DebounceDelay = 750; // ms
+    private CancellationTokenSource _debounceCts;
+
     private List<object> ToolbarItems = new List<object>
     {
         new List<object>
@@ -77,14 +76,44 @@
         },
     };
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await editor.SetHtml(NotesData.Notes);
+        }
+    }
 
     public void Clear()
     {
-        NotesData.Notes = String.Empty;
+        NotesData.Notes = string.Empty;
+        editor.SetHtml(NotesData.Notes);
     }
 
     public void SetDefault()
-    {
+    {       
         NotesData.SetDefault();
+        editor.SetHtml(NotesData.Notes);
+    }
+
+    private async Task OnEditorChanged(string html)
+    {
+        // Cancel any pending save
+        _debounceCts?.Cancel();
+        _debounceCts = new CancellationTokenSource();
+        var token = _debounceCts.Token;
+
+        try
+        {
+            // Wait for the debounce window
+            await Task.Delay(DebounceDelay, token);
+
+            // If not canceled, perform the save
+            NotesData.Notes = await editor.GetHtml();
+        }
+        catch (TaskCanceledException)
+        {
+            // Expected when user keeps typing
+        }
     }
 }

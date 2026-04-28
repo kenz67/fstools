@@ -16,6 +16,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.15" />
 	  <PackageReference Include="MudBlazor" Version="9.4.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+	  <PackageReference Include="Tizzani.MudBlazor.HtmlEditor" Version="2.3.0" />
   </ItemGroup>
 
 </Project>
