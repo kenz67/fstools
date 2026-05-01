@@ -8,10 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSingleton<TimerService>()
+builder.Services.AddScoped<TimerService>()
 	.AddScoped<ChartService>()
 	.AddScoped<NotesService>()
-	.AddSingleton<IcaoService>()
+	.AddScoped<IcaoService>()
 	.AddScoped<WeatherService>()
 	.AddScoped<BrowserService>()
 	.AddScoped<SettingsService>();
