@@ -1,6 +1,5 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-@import url('BootstrapBlazor/css/bootstrap.blazor.bundle.min.css');
-@import url('BootstrapBlazor.FontAwesome/css/font-awesome.min.css');
+
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -73,3 +72,109 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+
+
+/*=======================================================================================
+// Mud Classes
+=======================================================================================*/
+
+.dialog-width400 {
+    min-width: 400px; /* Set your desired minimum width */
+}
+
+.mud-expansion-panel-lightblue-header * {
+    //max-width: 600px;
+}
+
+.mud-expansion-panel-lightblue-header .mud-expand-panel-header {
+    background-color: lightblue;
+}
+
+.mud-expansion-panel-lightblue-header .mud-expand-panel-content {
+    padding-top: 15px;
+    background-color: white;
+}
+
+.mud-expansion-panel-khaki-header * {
+    //max-width: 600px;
+}
+
+.mud-expansion-panel-khaki-header .mud-expand-panel-header {
+    background-color: khaki;
+}
+
+.mud-expansion-panel-khaki-header .mud-expand-panel-content {
+    padding-top: 15px;
+    background-color: white;
+}
+
+.mud-select .mud-input-control > .mud-input-control-input-container > div.mud-input.mud-input-text {
+    background-color: royalblue;
+    color: white;
+}
+
+.mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
+    font-size: 1.5rem; /* Adjust font size as needed */
+    font-weight: bold;
+}
+
+.panel-about {
+    background-color: lightblue;
+}
+
+.dialogHeaderText {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dialogContextText {
+    font-size: 18px;
+}
+
+.mud-button-label {
+    text-transform: none
+}
+
+.grey-background {
+    background-color: lightgrey;
+}
+
+.warn-background {
+    background-color: lightyellow;
+}
+
+.group-label {
+    font-size: .75rem;
+    background-color: lightgrey;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.group-data {
+    font-size: .75rem;
+    background-color: white;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.white-autocomplete .mud-input-root {
+    background-color: white !important;
+}
+
+.pill-chip {
+    border-radius: 9999px !important; /* fully rounded */
+    padding: 0 12px;
+}
+
+.small-pill {
+    height: 16px !important;
+    line-height: 16px !important;
+    font-size: 0.7rem !important;
+    padding: 0 8px !important;
+    border-radius: 9999px !important;
+}
+
+.tight-checkbox .mud-checkbox {
+    margin-bottom: 0 !important;
+}

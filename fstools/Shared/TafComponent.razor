@@ -1,42 +1,43 @@
-﻿@using BootstrapBlazor.Components
+﻿@using MudBlazor
 @using fstools.Models;
 @using fstools.Services;
 
 
-<Collapse>
-    <CollapseItems>
-        <CollapseItem Text="@Title()" TitleColor="Color.Primary" IsCollapsed="false">
-            @if (WeatherInfo != null)
-            {
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Issue Time:</b> @WeatherInfo.TafData.IssueTime
-                    </div>
-                </div>
+<MudExpansionPanels>
+    <MudExpansionPanel Class="mud-expansion-panel-lightblue-header" Expanded="true" Text="@Title()">       
+        @if (WeatherInfo != null)
+        {
+            <MudGrid GutterSize="3">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Issue Time:</b> @WeatherInfo.TafData.IssueTime</MudText>
+                </MudItem>
 @*                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Valid Time:</b> @WeatherInfo.TafData.ValidTimeTo
-                    </div>
-                </div>*@
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Raw TAF:</b>
-                        <ul>
-                            @foreach (var c in WeatherInfo.TafData.Line_by_line)
-                            {
-                                <li>@c</li>
-                            }
-                        </ul>
-                    </div>
+                <div class="col-12">
+                    <b>Valid Time:</b> @WeatherInfo.TafData.ValidTimeTo
                 </div>
-            }
-            else
-            {
-                <label>TAF data not found</label>
-            }
-        </CollapseItem>
-    </CollapseItems>
-</Collapse>
+            </div>*@
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Issue Time:</b> @WeatherInfo.TafData.IssueTime</MudText>
+                </MudItem>
+
+                 <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Raw TAF:</b></MudText>
+                    <MudList T="string" Dense="true">
+                        @foreach (var c in WeatherInfo.TafData.Line_by_line)
+                        {
+                            <MudListItem>@c</MudListItem>
+                        }
+                    </MudList>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <label>TAF data not found</label>
+        }
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
        
 @code {

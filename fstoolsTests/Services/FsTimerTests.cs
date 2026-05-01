@@ -1,9 +1,11 @@
 ﻿using fstools.Services;
 using Moq;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace fstoolsTests.Services
 {
+    [ExcludeFromCodeCoverage]
     public class FsTimerTests
     {
         [Fact]

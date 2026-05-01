@@ -1,0 +1,82 @@
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime Js
+
+@if (string.IsNullOrWhiteSpace(FileName))
+{
+    <div class="mud-typography mud-typography-body2">No PDF selected.</div>
+}
+else
+{
+    <iframe @ref="_iframe"
+            src="@_src"
+            style="width:100%;height:@Height;border:0;"
+            title="PDF Viewer">
+        Your browser does not support iframes to display PDFs.
+    </iframe>
+}
+
+@code {
+    private ElementReference _iframe = default!;
+    private string _src = string.Empty;
+
+    /// <summary>
+    /// URL of the PDF to display. Can be an absolute URL or a data URI.
+    /// </summary>
+    [Parameter] public string FileName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Height CSS value for the viewer, e.g. "800px" or "100vh".
+    /// </summary>
+    [Parameter] public string Height { get; set; } = "800px";
+
+    /// <summary>
+    /// If true the component will append a timestamp query param to force reload when Refresh is called.
+    /// </summary>
+    [Parameter] public bool StreamMode { get; set; } = true;
+
+    /// <summary>
+    /// Arbitrary passthrough parameter for compatibility with callers that used Pagemode.
+    /// Not used by this simple viewer but kept to preserve API compatibility.
+    /// </summary>
+    [Parameter] public string PageMode { get; set; }
+
+    /// <summary>
+    /// Arbitrary passthrough parameter for compatibility with callers that used Navpanes.
+    /// Not used by this simple viewer but kept to preserve API compatibility.
+    /// </summary>
+    [Parameter] public bool NavPanes { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        // initialize src when parameters change
+        _src = BuildSrc();
+    }
+
+    private string BuildSrc()
+    {
+        if (string.IsNullOrWhiteSpace(FileName))
+            return string.Empty;
+
+        if (!StreamMode)
+        {
+            // when not streaming avoid adding timestamp (consumer requested non-stream behavior)
+            return FileName;
+        }
+
+        // Add timestamp to avoid stale caching; preserves existing query string if present
+        var sep = FileName.Contains('?') ? '&' : '?';
+        return $"{FileName}{sep}ts={DateTime.UtcNow.Ticks}";
+    }
+
+    /// <summary>
+    /// Force the iframe to reload the PDF. Caller in Pages/Charts.razor calls this twice to work around a
+    /// race in the previous implementation; this method keeps compatibility.
+    /// </summary>
+    public Task Refresh()
+    {
+        _src = BuildSrc();
+        // StateHasChanged will update the iframe src; using InvokeVoidAsync to ensure DOM update completes.
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}
