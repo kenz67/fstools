@@ -190,18 +190,6 @@
         try
         {
             var response = await client.GetStringAsync($"https://api-v2.aviationapi.com/v2/charts?airport={icao}");
-            response = response
-                .Replace($"\"{icao}\":", "\"ICAO\":")
-                .Replace($"\"K{icao}\":", "\"ICAO\":")
-                .Replace("\"APD\"", "\"Airport Diagram\"")
-                .Replace("\"DP\"", "\"Departures (SID)\"")
-                .Replace("\"HOT\"", "\"Hot Spots\"")
-                .Replace("\"IAP\"", "\"Approaches\"")
-                .Replace("\"MIN\"", "\"Minimums\"")
-                .Replace("\"STAR\"", "\"Arrivals (STAR)\"")
-                .Replace("\"DAU\"", "\"Departure AAUP\"")
-                .Replace("\"LAH\"", "\"Land and Hold Short\"")
-                ;
             var chartRoot = JsonConvert.DeserializeObject<ChartRoot>(response);
             var allCharts = chartRoot.charts;
 
