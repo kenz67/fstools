@@ -1,32 +1,30 @@
-﻿@using BootstrapBlazor.Components
+﻿@using MudBlazor
 @using fstools.Models;
 @using fstools.Services;
 
 
-<Collapse>
-    <CollapseItems>
-        <CollapseItem Text="@Title()" TitleColor="Color.Primary" IsCollapsed="false">
-            @if (WeatherInfo != null)
-            {
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Pilot Reports for Area:</b>
-                        <ul>
-                            @foreach (var c in WeatherInfo.PirepData.Line_by_line)
-                            {
-                                <li>@c</li>
-                            }
-                        </ul>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <label>PIREP data not found</label>
-            }
-        </CollapseItem>
-    </CollapseItems>
-</Collapse>
+<MudExpansionPanels>
+    <MudExpansionPanel Class="mud-expansion-panel-lightblue-header" Expanded="false" Text="@Title()">
+        @if (WeatherInfo != null)
+        {
+            <MudGrid GutterSize="3">
+                <MudItem xs="12">
+                <MudText Typo="Typo.body1"><b>Pilot Reports for Area:</b></MudText>
+                    <MudList T="string" Dense="true">
+                    @foreach (var c in WeatherInfo.PirepData.Line_by_line)
+                    {
+                        <MudListItem>@c</MudListItem>
+                    }
+                </MudList>
+            </MudItem>
+        </MudGrid>
+        }
+        else
+        {
+            <label>PIREP data not found</label>
+        }
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
        
 @code {

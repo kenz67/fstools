@@ -1,5 +1,5 @@
 ﻿@page "/weather"
-@using BootstrapBlazor.Components
+@using MudBlazor;
 @using Newtonsoft.Json;
 @using fstools.Models;
 @using fstools.Services;
@@ -13,59 +13,50 @@
 
 <h1>Weather</h1>
 
-<Collapse>
-    <CollapseItems>
-        <CollapseItem Text="Search" TitleColor="Color.Info" IsCollapsed="false">
-            <div class="row g-3">
-                @if (icaoService.IcaoList != null)
-                {
-                    <div class="col-3">
-                        <AutoComplete @bind-Value="@WxSvc.ICAO"
-                                      Items="icaoService.IcaoList"
-                                      IsLikeMatch="true"
-                                      IgnoreCase="true"
-                                      DisplayCount="7"
-                                      OnEnterAsync="OnEnterAsync"
-                                      ShowDropdownListOnFocus="false"
-                                      PlaceHolder="ICAO"
-                                      IsSelectAllTextOnFocus="true" />
-                    </div>
+         <div class="row g-3">            
+            @if (icaoService.IcaoList != null)
+            {
+                <div class="col-3">
+                    <MudAutocomplete T="string"
+                        @bind-Value="WxSvc.ICAO"
+                        CoerceValue="true"
+                        SearchFunc="@SearchIcao"
+                        OnBlur="OnAutoCompleteBlur"
+                        MinCharacters="1"
+                        MaxItems="7"
+                        OpenIcon="@Icons.Material.Filled.ArrowDropDown"
+                        Dense="true"
+                        Variant="Variant.Outlined"
+                        Clearable="false"
+                        Placeholder="ICAO"
+                        InputAttributes="@(new Dictionary<string, object> { { "aria-label", "ICAO" } })"
+                        @onkeydown="OnAutoCompleteKeyDown" />
+                </div>
+            
+                <div class="col-2">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mud-button-filled" OnClick="Search">Search</MudButton>
+                </div>
+            }
+            else
+            {
+                <div class="col-2">
+                    <MudTextField T="string"
+                                  @bind-Value="ChartSvc.CurrentIcao"
+                                  Immediate="true"
+                                  Placeholder="ICAO"
+                                  Variant="Variant.Outlined"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  @onkeydown="OnTextFieldKeyDown" />
+                </div>
+                
+                <div class="col-2">
+                    <MudButton Style="margin-top:27px" Variant="Variant.Filled" Color="Color.Primary" OnClick="Search">Search</MudButton>
+                </div>
+            }
+        </div>
 
-                    <div class="col-2">
-                        <Button ButtonStyle="ButtonStyle.Round"
-                                Color="Color.Primary"
-                                OnClick="Search">
-                            Search
-                        </Button>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-2">
-                        <BootstrapInput PlaceHolder="ICAO."
-                                        TValue="string"
-                        @bind-Value="@WxSvc.ICAO"
-                                        IsAutoFocus="true"
-                                        IsSelectAllTextOnFocus="true"
-                                        ShowLabel="true"
-                                        OnEnterAsync="OnEnterAsync"
-                                        DisplayText="Enter ICAO" />
-                    </div>
 
-                    <div class="col-2">
-                        <Button style="margin-top:27px"
-                                ButtonStyle="ButtonStyle.Round"
-                                Color="Color.Primary"
-                                OnClick="Search">
-                            Search
-                        </Button>
-                    </div>
-
-                }
-            </div>
-        </CollapseItem>
-    </CollapseItems>
-</Collapse>
 @if (!String.IsNullOrEmpty(WxSvc.WxInfo?.ICAO))
 {
     <div class="row g-3" style="margin-top:20px">
@@ -100,6 +91,23 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    private async Task<IEnumerable<string>> SearchIcao(string value, CancellationToken token)
+    {
+        var list = icaoService.IcaoList ?? Enumerable.Empty<string>();
+
+        // When input is empty show top items (or return empty to avoid dropdown)
+        if (string.IsNullOrWhiteSpace(value))
+            return list.Take(7);
+
+        // Case-insensitive contains matching; adjust to StartsWith for prefix matching
+        var results = list
+            .Where(i => i.Contains(value, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(i => i)
+            .Take(30);
+
+        return await Task.FromResult(results);
+    }
+
     private async Task Search()
     {
         await PerformSearch(WxSvc.ICAO);
@@ -107,7 +115,7 @@
 
     private async Task PerformSearch(string icao)
     {
-        if (icao.Equals(".") && !String.IsNullOrEmpty(ChartSvc.CurrentIcao))
+        if (icao != null && icao.Equals(".") && !String.IsNullOrEmpty(ChartSvc.CurrentIcao))
         {
             icao = ChartSvc.CurrentIcao;
         }
@@ -197,5 +205,30 @@
         }
 
         await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnAutoCompleteKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            await OnEnterAsync(ChartSvc.CurrentIcao);
+        }
+    }
+
+    private async Task OnTextFieldKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await OnEnterAsync(ChartSvc.CurrentIcao);
+        }
+    }
+
+    // Optionally trigger search on blur (user selected via mouse then clicked away)
+    private async Task OnAutoCompleteBlur(FocusEventArgs _)
+    {
+        if (!string.IsNullOrWhiteSpace(ChartSvc.CurrentIcao))
+        {
+            await Search();
+        }
     }
 }

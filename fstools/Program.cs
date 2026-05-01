@@ -1,28 +1,30 @@
 using fstools.Services;
+using MudBlazor.Services;
 using System.Diagnostics.CodeAnalysis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddBootstrapBlazor().AddRazorPages();
+builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddScoped<TimerService>()
-    .AddScoped<ChartService>()
-    .AddScoped<NotesService>()
-    .AddSingleton<IcaoService>()
-    .AddScoped<WeatherService>()
-    .AddScoped<BrowserService>()
-    .AddScoped<SettingsService>();
+builder.Services.AddSingleton<TimerService>()
+	.AddScoped<ChartService>()
+	.AddScoped<NotesService>()
+	.AddSingleton<IcaoService>()
+	.AddScoped<WeatherService>()
+	.AddScoped<BrowserService>()
+	.AddScoped<SettingsService>();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -31,6 +33,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.MapRazorPages();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

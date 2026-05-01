@@ -2,9 +2,9 @@
 
 public class NotesService
 {
-    public string Notes { get; set; }
+	public string Notes { get; set; }
 
-    private readonly string defaultNotes = """
+	private readonly string defaultNotes = """
         <h3 class="">
             <u>Altitudes</u>
         </h3>
@@ -21,13 +21,13 @@ public class NotesService
         <ul><li><u><br></u></li></ul>
 """;
 
-    public NotesService()
-    {
-        SetDefault();
-    }
+	public NotesService()
+	{
+		SetDefault();
+	}
 
-    public void SetDefault()
-    {
-        Notes = defaultNotes;
-    }
+	public void SetDefault()
+	{
+		Notes = defaultNotes;
+	}
 }

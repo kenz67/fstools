@@ -17,9 +17,17 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - job: Build
+  - job: "Build_Test"
+    displayName: "Build & Test"
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
+      displayName: "Build"
+    - task: DotNetCoreCLI@2
+      displayName: "Test"
+      inputs:
+         command: test
+         projects: '**/*Tests/*.csproj'
+         arguments: '--configuration $(buildConfiguration)'
 
 - stage: Publish
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')

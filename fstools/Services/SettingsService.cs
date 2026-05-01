@@ -2,5 +2,5 @@
 
 public class SettingsService
 {
-    public bool ShowCl { get; set; } = false;
+    public virtual bool ShowCl { get; set; } = false;
 }

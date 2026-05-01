@@ -1,94 +1,97 @@
-﻿@using BootstrapBlazor.Components
-@using fstools.Models;
-@using fstools.Services;
+﻿@using MudBlazor
+@using fstools.Models
+@using fstools.Services
 
+<MudExpansionPanels>
+    <MudExpansionPanel Class="mud-expansion-panel-lightblue-header" Text="@Title()" @bind-Expanded="_expanded">
+        @if (WeatherInfo != null)
+        {
+            <MudGrid GutterSize="3">
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Raw METAR:</b> @WeatherInfo.WeatherData.RawOb</MudText>
+                </MudItem>
 
-<Collapse>
-    <CollapseItems>
-        <CollapseItem Text="@Title()" TitleColor="Color.Primary" IsCollapsed="false">
-            @if (WeatherInfo != null)
-            {
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Raw METAR:</b> @WeatherInfo.WeatherData.RawOb
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Report Time:</b> @WeatherInfo.WeatherData.ReportTime
-                    </div>
-                </div>
-@*                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Flight Category:</b> @WeatherInfo.WeatherData.Category
-                    </div>
-                </div>*@
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Temperature/Dewpoint:</b> @WeatherInfo.WeatherData.Temp&deg;C / @WeatherInfo.WeatherData.Dewp&deg;C
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        @if (WeatherInfo.WeatherData.Wdir.Equals("0"))
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Report Time:</b> @WeatherInfo.WeatherData.ReportTime</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Temperature/Dewpoint:</b> @WeatherInfo.WeatherData.Temp&deg;C / @WeatherInfo.WeatherData.Dewp&deg;C</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    @if (WeatherInfo.WeatherData.Wspd.Equals("0"))
+                    {
+                        <MudText Typo="Typo.body1"><b>Wind:</b> Calm</MudText>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body1"><b>Wind:</b> @WeatherInfo.WeatherData.Wdir degrees at @WeatherInfo.WeatherData.Wspd knots</MudText>
+                    }
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Visibility:</b> @WeatherInfo.WeatherData.Visib statute miles</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Altimeter:</b> @Math.Round(WeatherInfo.WeatherData.Altim * .02953, 2) Hg / @WeatherInfo.WeatherData.Altim mb</MudText>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body1"><b>Sky Conditions:</b></MudText>
+                    <MudList T="string" Dense="true">
+                        @foreach (var c in WeatherInfo.WeatherData.Clouds)
                         {
-                            <label><b>Wind:</b> Calm</label>
-                        }
-                        else
-                        {
-                            <label><b>Wind:</b> @WeatherInfo.WeatherData.Wdir degrees at @WeatherInfo.WeatherData.Wspd knots</label>
-                        }
-                    
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Visibility:</b> @WeatherInfo.WeatherData.Visib statute miles
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Altimeter:</b> @Math.Round(WeatherInfo.WeatherData.Altim * .02953, 2) Hg / @WeatherInfo.WeatherData.Altim mb
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12">
-                        <b>Sky Conditions:</b>
-                        <ul>
-                            @foreach (var c in WeatherInfo.WeatherData.Clouds)
+                            @if (c.Cover.Equals("CLR"))
                             {
-                                @if (c.Cover.Equals("CLR"))
-                                {
-                                    <li>Clear</li>
-                                }
-                                else
-                                {
-                                     <li>@c.Cover at @c.Base' AGL</li>
-                                }
+                                <MudListItem>Clear</MudListItem>
                             }
-                        </ul>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <label>METAR data not found</label>
-            }
-        </CollapseItem>
-    </CollapseItems>
-</Collapse>
+                            else
+                            {
+                                <MudListItem>@c.Cover at @c.Base' AGL</MudListItem>
+                            }
+                        }
+                    </MudList>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudText Typo="Typo.body1">METAR data not found</MudText>
+        }
+    </MudExpansionPanel>
+</MudExpansionPanels>
 
-       
 @code {
     [Parameter]
-    public String ICAO { get; set; }
+    public string ICAO { get; set; }
+
+    // Backing field used to detect when WeatherInfo becomes available after async load.
+    private MetarInfo _weatherInfo;
 
     [Parameter]
-    public MetarInfo WeatherInfo { get; set; }
+    public MetarInfo WeatherInfo
+    {
+        get => _weatherInfo;
+        set
+        {
+            var wasNull = _weatherInfo == null;
+            _weatherInfo = value;
 
+            // If data just arrived, open the panel so the user sees the contents immediately.
+            if (_weatherInfo != null && wasNull)
+            {
+                _expanded = true;
+            }
+        }
+    }
+
+    // Bound to the MudExpansionPanel expanded state.
+    private bool _expanded;
 
     protected string Title()
     {
-        return $"METAR for {ICAO.ToUpper()}";
+        return $"METAR for {ICAO?.ToUpper()}";
     }
 }

@@ -2,32 +2,31 @@
 using fstools.Services;
 using Xunit;
 
-namespace fstoolsTests.Services
+namespace fstoolsTests.Services;
+
+public class TimerServiceTests
 {
-    public class TimerServiceTests
+    [Fact]
+    public void TimerSvcValues()
     {
-        [Fact]
-        public void TimerSvcValues()
-        {
-            var svc = new TimerService();
-            Assert.Equal(0, svc.Info.Count);
-            Assert.Equal(0, svc.Timers.Count);
-            Assert.Equal(0, svc.TimerCnt);
+        var svc = new TimerService();
+        Assert.Empty(svc.Info);
+        Assert.Empty(svc.Timers);
+        Assert.Equal(0, svc.TimerCnt);
 
-            svc.Info.Add(new StopwatchInfo());
-            Assert.Equal(1, svc.Info.Count);
-            Assert.Equal(0, svc.Timers.Count);
-            Assert.Equal(0, svc.TimerCnt);
+        svc.Info.Add(new StopwatchInfo());
+        Assert.Single(svc.Info);
+        Assert.Empty(svc.Timers);
+        Assert.Equal(0, svc.TimerCnt);
 
-            svc.Timers.Add(new FsTimer());
-            Assert.Equal(1, svc.Info.Count);
-            Assert.Equal(1, svc.Timers.Count);
-            Assert.Equal(0, svc.TimerCnt);
+        svc.Timers.Add(new FsTimer());
+        Assert.Single(svc.Info);
+        Assert.Single(svc.Timers);
+        Assert.Equal(0, svc.TimerCnt);
 
-            svc.TimerCnt = 10;
-            Assert.Equal(1, svc.Info.Count);
-            Assert.Equal(1, svc.Timers.Count);
-            Assert.Equal(10, svc.TimerCnt);
-        }
+        svc.TimerCnt = 10;
+        Assert.Single(svc.Info);
+        Assert.Single(svc.Timers);
+        Assert.Equal(10, svc.TimerCnt);
     }
 }

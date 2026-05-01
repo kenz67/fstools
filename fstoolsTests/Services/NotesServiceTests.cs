@@ -1,11 +1,11 @@
 ﻿using fstools.Services;
 using Xunit;
 
-namespace fstoolsTests.Services
+namespace fstoolsTests.Services;
+
+public class NotesServiceTests
 {
-    public class NotesServiceTests
-    {
-        private readonly string defaultNotes = """
+    private readonly string defaultNotes = """
         <h3 class="">
             <u>Altitudes</u>
         </h3>
@@ -22,26 +22,25 @@ namespace fstoolsTests.Services
         <ul><li><u><br></u></li></ul>
 """;
 
-        [Fact]
-        public void NotesServiceTest()
+    [Fact]
+    public void NotesServiceTest()
+    {
+        var svc = new NotesService();
+
+        Assert.Equal(defaultNotes, svc.Notes);
+    }
+
+    [Fact]
+    public void SetDefaultTest()
+    {
+        var svc = new NotesService
         {
-            var svc = new NotesService();
+            Notes = "Some Notes"
+        };
 
-            Assert.Equal(defaultNotes, svc.Notes);
-        }
+        Assert.Equal("Some Notes", svc.Notes);
+        svc.Notes = defaultNotes;
 
-        [Fact]
-        public void SetDefaultTest()
-        {
-            var svc = new NotesService
-            {
-                Notes = "Some Notes"
-            };
-
-            Assert.Equal("Some Notes", svc.Notes);
-            svc.Notes = defaultNotes;
-
-            Assert.Equal(defaultNotes, svc.Notes);
-        }
+        Assert.Equal(defaultNotes, svc.Notes);
     }
 }
